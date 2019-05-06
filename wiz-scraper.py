@@ -1,7 +1,8 @@
-from urllib.request import urlopen, urlretrieve
 import json
 import os
 import re
+import requests
+import shutil
 import time
 
 from bs4 import BeautifulSoup
@@ -11,7 +12,7 @@ MAIN_URL = "https://www.wiz.pl/"
 
 def get_article_soup(url):
     time.sleep(REQUEST_LAG_SECONDS)
-    html = urlopen(url)
+    html = requests.get(url).content
     return BeautifulSoup(html, "html.parser")
 
 def get_article_author_date(article_body):
@@ -41,17 +42,20 @@ def article_to_dict(soup):
 def get_article_img(article_body, main_url, article_title):
     if not os.path.exists(os.getcwd()+"/img/"):
         os.mkdir("img")
-    try:
-        img_src = article_body.find('img', {'src': re.compile(r'jpg')})['src']
-        urlretrieve(str(main_url)+str(img_src), os.getcwd()+"/img/"+str(article_title)+".jpg")
-    except:
-        pass
+    img_element = article_body.find('img', {'src': re.compile(r'jpg')})
+    if img_element:
+        img_src = img_element['src']
+        img = requests.get(str(main_url)+str(img_src), stream=True)
+        if img.status_code == 200:
+            with open(os.getcwd()+"/img/"+str(article_title)+".jpg", 'wb') as f:
+                img.raw.decode_content = True
+                shutil.copyfileobj(img.raw, f)  
 
 def get_link_list(reg, soup):
-    link_list = list()
+    link_list = set()
     for link in soup.find_all('a', href=re.compile(reg)):
         if 'href' in link.attrs:
-            link_list.append(str(MAIN_URL)+link.attrs['href'])
+            link_list.add(str(MAIN_URL)+link.attrs['href'])        
     return link_list
 
 def get_json_page_dict(edition_list_page):
