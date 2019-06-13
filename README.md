@@ -13,7 +13,7 @@ ___________________________
 in bash run following command
 
 ```
-source install.sh
+make install
 ```
 ___________________________
 
@@ -22,6 +22,6 @@ ___________________________
 in bash run following command
 
 ```
-source run.sh
+make run
 ```
 ___________________________

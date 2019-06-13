@@ -9,10 +9,21 @@ import httpretty
 import pytest
 
 
-from scraper import (get_soup, get_image, save_image_file, 
-    get_image_name, get_article_dict, get_link_list, change_to_summary_link,
-    get_edition_date, get_edition_dict, save_json_file, get_table_of_contents,
-    get_article_author_date, get_json_page_dict )
+from scraper import (
+    get_soup, 
+    get_image, 
+    save_image_file, 
+    get_image_name, 
+    get_article_dict, 
+    get_link_list, 
+    change_to_summary_link,
+    get_edition_date, 
+    get_edition_dict, 
+    save_json_file, 
+    get_table_of_contents,
+    get_article_author_date, 
+    get_json_page_dict 
+    )
 
 
 
@@ -230,7 +241,7 @@ class GetArticleDictTestCase(TestCase):
 class GetLinkListTestCase(TestCase):
 
     def test_get_link_list__no_links(self):
-        list = get_link_list('(10,.+html)$', 
+        links = get_link_list('(10,.+html)$', 
         BeautifulSoup(
         b'''
         <html>
@@ -246,7 +257,7 @@ class GetLinkListTestCase(TestCase):
 
 
     def test_get_link_list__find_all_links(self):
-        list = get_link_list('(10,.+html)$', 
+        links = get_link_list('(10,.+html)$', 
         BeautifulSoup(
         b'''
         <html>
@@ -261,7 +272,7 @@ class GetLinkListTestCase(TestCase):
         </html>
         ''',
         'html.parser'))
-        for link in list:
+        for link in links:
             assert link is not None
 
 class ChangeToSummaryLinkTestCase(TestCase):
@@ -269,6 +280,8 @@ class ChangeToSummaryLinkTestCase(TestCase):
     def test_change_to_summary_link(self):
         assert change_to_summary_link(
             "https://www.wiz.pl/10,269.html") == 'https://www.wiz.pl/19,269.html'
+        assert change_to_summary_link(
+            "https://www.wiz.pl/10,251.html") == 'https://www.wiz.pl/19,251.html'
 
 
 class GetEditionDateTestCase(TestCase):
@@ -323,18 +336,18 @@ class GetTableOfContentsTestCase(TestCase):
         ''',  # noqa
         'html.parser')
 
-        assert get_table_of_contents(table)[0] == dict({
+        assert get_table_of_contents(table)[0] == {
                     'title' : "Biometeorologia",
                     'subTitle' : "Siódme poty; Andrzej Hołdys"
-                    })
-        assert get_table_of_contents(table)[1] == dict({
+                    }
+        assert get_table_of_contents(table)[1] == {
                     'title' : "Fizjologia",
                     'subTitle' : "Kriorewolucja; Katarzyna Kornicka"
-                    })
-        assert get_table_of_contents(table)[2] == dict({
+                    }
+        assert get_table_of_contents(table)[2] == {
                     'title' : "Technika",
                     'subTitle' : "Węsząca elektronika; Justyna Jońca"
-                    })
+                    }
         
 
 class GetEditionDictTestCase(TestCase):
