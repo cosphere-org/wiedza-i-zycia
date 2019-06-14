@@ -46,7 +46,7 @@ def save_image_file(image_content):
 
 def get_image_name(image_content):
     if image_content:
-        return str(hashlib.md5(image_content).hexdigest()) + '.jpg'
+        return f'{hashlib.md5(image_content).hexdigest()}.jpg'
 
 
 def get_article_author_date(article_body):
@@ -54,8 +54,8 @@ def get_article_author_date(article_body):
             'div', class_="dodano-2").get_text()
 
     if article_author_date: 
-        author = r'(Autor: (?P<author>(\w+[\s-])+\w+))'
-        date = r'(dodano: (?P<date>(\d+[,-:\.\s]){3}))'
+        author = re.compile(r'(Autor: (?P<author>(\w+[\s-])+\w+))')
+        date = re.compile(r'(dodano: (?P<date>(\d+[,-:\.\s]){3}))')
 
         article_author = re.search(author, article_author_date)
         if article_author:
@@ -64,7 +64,6 @@ def get_article_author_date(article_body):
         if article_date:
             article_date = article_date.group('date')
         return (article_author, article_date)
-
 
 
 def get_article_dict(soup, link):
@@ -195,4 +194,4 @@ def save_json_file():
 
 
 print("czas oczekiwania powyżej 5 min.")
-save_json_file()
+#save_json_file()
