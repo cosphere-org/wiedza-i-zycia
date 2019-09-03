@@ -1,197 +1,208 @@
-'''wiedza i zycie - scraper'''
-import hashlib
+
 import json
 import os
 import re
 import time
-import requests
 
 from bs4 import BeautifulSoup
+import click
+import requests
+
+from .image import Image
 
 
-def get_soup(url):
-    time.sleep(float(os.environ['REQUEST_LAG_SECONDS']))
-    html = requests.get(url).content
-    print('---request---')
+class WiedzaIZycieScraper:
 
-    return BeautifulSoup(html, "html.parser")
+    def __init__(self, main_url, editions_url, request_lag_seconds):
+        self.main_url = main_url
+        self.editions_url = editions_url
+        self.request_lag_seconds = request_lag_seconds
 
+    #
+    # ENTRYPOINT
+    #
+    def scrape_and_save(self):
 
-def get_image(soup, class_name):
+        click.secho(f'[STARTING SCRAPER]', fg='green')
 
-    img_soup = soup.find(
-        'img',
-        {'class': class_name},
-        {'src': re.compile(r'(\.jpg|\.png|\.jpeg|\.svg)$')})
+        self.save_editions(self.get_editions_data())
 
-    if img_soup:
-        response = requests.get(str(os.environ['MAIN_URL']) + str(img_soup['src']))
+        click.secho(f'[SCRAPER DONE]', fg='green')
 
-        if response.status_code == 200:
-            return response.content
+    def get_editions_data(self):
 
+        edition_urls = self.get_urls_by_pattern(
+            self.get_page(self.editions_url), '(10,.+html)$')
 
-def save_image_file(image_content):
+        return [
+            self.get_edition_data(url)
+            for url in edition_urls
+        ]
 
-    image_dir_path = os.path.join(os.getcwd(), 'img')
+    def save_editions(self, editions):
 
-    if not os.path.exists(image_dir_path):
-        os.mkdir(image_dir_path)
-    if image_content:
-        filename = hashlib.md5(image_content).hexdigest()
-        image_path = os.path.join(image_dir_path, str(filename) + '.jpg')
-        with open(image_path, 'wb') as f:
-            f.write(image_content)
+        path = os.path.join(
+            os.path.dirname(__file__), 'data', 'editions.json')
 
+        with open(path, 'w') as f:
+            f.write(
+                json.dumps(
+                    editions,
+                    indent=4,
+                    sort_keys=True))
 
-def get_image_name(image_content):
-    if image_content:
-        return f'{hashlib.md5(image_content).hexdigest()}.jpg'
+    #
+    # EDITION
+    #
+    def get_edition_data(self, url):
 
+        click.secho(f'\n\n[EDITION]', fg='yellow')
 
-def get_article_author_date(article_body):
-    article_author_date = article_body.find(
-            'div', class_="dodano-2").get_text()
+        edition_summary = self.get_page(
+            re.sub(r'\/(\d{2}),', '/19,', url, flags=re.IGNORECASE))
+        date = self.get_edition_date(edition_summary)
 
-    if article_author_date: 
-        author = re.compile(r'(Autor: (?P<author>(\w+[\s-])+\w+))')
-        date = re.compile(r'(dodano: (?P<date>(\d+[,-:\.\s]){3}))')
+        click.secho(f'url: {url}', fg='yellow')
+        click.secho(f'date: {date}', fg='yellow')
 
-        article_author = re.search(author, article_author_date)
-        if article_author:
-            article_author = article_author.group('author')
-        article_date = re.search(date, article_author_date)
-        if article_date:
-            article_date = article_date.group('date')
-        return (article_author, article_date)
+        return {
+            'url': url,
+            'table_of_contents': (
+                self.get_edition_table_of_contents(edition_summary)),
+            'date': date,
+            'image': (
+                Image(self.main_url, edition_summary, 'maxi-pokaz-cz')
+                .download()),
+            'articles': self.get_articles_data(url),
+        }
 
+    def get_edition_table_of_contents(self, edition):
 
-def get_article_dict(soup, link):
-    try:
-        article_title = soup.title.get_text()
-    except AttributeError:
-        article_title = None
-    try:
-        article_body = soup.find('div', class_="box-teksty-pokaz")
-    except AttributeError:
-        article_body = None
-   
-    p_list = list()
-    article_author = None 
-    article_date = None
-    if article_body:
-        for paragraph_text in article_body.find_all('p'):
-            p_list.append(paragraph_text.get_text())
+        toc = []
+        summary_div = edition.find('div', class_='box-czasopisma-pokaz')
+        if summary_div:
+            table = summary_div.find(
+                'div', attrs={'style': 'margin-bottom: 15px'})
 
-        article_author, article_date = get_article_author_date(article_body)
+            if table:
+                pretty_table = BeautifulSoup(
+                    re.sub(r'<br\/>|<\/em>|<em>|\n', '', str(table)),
+                    'html.parser')
 
-    image_content = get_image(soup, 'maxi-pokaz')
-    save_image_file(image_content)
+            for strong in pretty_table.find_all('strong'):
+                toc.append({
+                    'title': str(strong.text),
+                    'sub_title': str(strong.next_sibling)
+                })
 
-    article_dic = {
-        "title": str(article_title),
-        "article_author": str(article_author),
-        "article_date": str(article_date),
-        "article_link": str(link),
-        "article_img": str(get_image_name(image_content)),
-        "body": p_list
-    }
-    return article_dic
+        return toc
 
+    def get_edition_date(self, edition):
 
-def get_link_list(reg, soup):
-    link_list = set()
-    # test------------------------------------------------
-    #number = 10
-    # ----------------------------------------------------
-    for link in soup.find_all('a', href=re.compile(reg)):
-        # if number == 0:
-        #     break
-        # number -= 1
-        if 'href' in link.attrs:
-            link_list.add(str(os.environ['MAIN_URL']) + link.attrs['href'])
-    return link_list
+        edition_title_date = edition.find(
+            'div',
+            attrs={'style': 'margin-top: 0px;'})
 
+        if edition_title_date:
+            edition_date = re.findall(
+                r'\d{2}/[12]\d{3}', str(edition_title_date.get_text()))
 
-def change_to_summary_link(edition_link):
-    return re.sub(r'\/(\d{2}),', '/19,', edition_link, flags=re.IGNORECASE)
+            return edition_date[0]
 
+    #
+    # ARTICLE
+    #
+    def get_articles_data(self, edition_url):
 
-def get_edition_date(soup):
-    edition_title_date = soup.find('div', attrs={'style': 'margin-top: 0px;'})  # noqa
-    if edition_title_date:
-        edition_date = re.findall(
-            r'\d{2}/[12]\d{3}', str(edition_title_date.get_text()))
-        return edition_date[0]
+        articles_urls = self.get_urls_by_pattern(
+            self.get_page(edition_url), '8,.+html')
 
+        return [
+            self.get_article_data(article_url)
+            for article_url in articles_urls
+        ]
 
-def get_table_of_contents(table):
-    table_of_contents_list = list()
-    if table:
-        pretty_table = BeautifulSoup(re.sub(
-                        r'<br\/>|<\/em>|<em>|\n', '', str(table)),
-                        'html.parser')
-    for strong in pretty_table.find_all("strong"):
-        if strong:
-            table_of_contents_list.append(
-                dict({
-                    'title' : str(strong.text),
-                    'subTitle' : str(strong.next_sibling)
-                    }))
-    return  table_of_contents_list
+    def get_article_data(self, url):
 
+        click.secho(f'\n[ARTICLE]', fg='blue')
 
-def get_edition_dict(soup, link):
-    summary_body = soup.find('div', class_="box-czasopisma-pokaz")
-    if summary_body:
-        table = summary_body.find('div', attrs={'style': 'margin-bottom: 15px'})
-        table_of_contents_list = None
-        if table:
-            table_of_contents_list = get_table_of_contents(table)
+        article = self.get_page(url)
+        author, date, paragraphs = self.get_article_elements(article)
+        title = self.get_article_title(article)
 
-    image_content = get_image(soup, "maxi-pokaz-cz")
-    save_image_file(image_content)
+        click.secho(f'url: {url}', fg='blue')
+        click.secho(f'title: {title}', fg='blue')
+        click.secho(f'author: {author}', fg='blue')
+        click.secho(f'date: {date}', fg='blue')
 
-    edition_dict = {
-        'edition_date': str(get_edition_date(soup)),
-        'edition_link': str(link),
-        'table_of_contents': table_of_contents_list,
-        'edition_cover_image': str(get_image_name(image_content))
-    }
-    return edition_dict
+        return {
+            'url': url,
+            'title': title,
+            'author': author,
+            'date': date,
+            'paragraphs': paragraphs,
+            'image': (
+                Image(self.main_url, article, 'maxi-pokaz')
+                .download()),
+        }
 
+    def get_article_title(self, article):
 
-def get_json_page_dict():
-    page_list = list()
-    edition_list_links = get_link_list(
-        '(10,.+html)$', 
-        get_soup(os.environ['EDITION_LIST_PAGE']))
-    if edition_list_links:
-        for edition_link in edition_list_links:
-            article_list_links = get_link_list('8,.+html', get_soup(edition_link))  # noqa
-           
-            article_list = list()
-            for article_link in article_list_links:
-                article_soup = get_soup(article_link)
-                article_list.append(get_article_dict(article_soup, article_link))
+        try:
+            return article.title.get_text()
 
-            edition_dict = get_edition_dict(
-                get_soup(change_to_summary_link(edition_link)), 
-                edition_link)
-            edition_dict['articles'] = article_list
-            edition_date = get_edition_date(
-                get_soup(change_to_summary_link(edition_link)))
-            page_list.append(edition_dict)
-        return page_list
-    else: 
-        return 'No links'
+        except AttributeError:
+            return None
 
+    def get_article_elements(self, article):
 
-def save_json_file():
-    article_json = get_json_page_dict()
-    with open('data.json', 'w+') as f:
-        json.dump(article_json, f)
+        paragraphs = []
+        author = None
+        date = None
 
+        try:
+            article_div = article.find('div', class_='box-teksty-pokaz')
 
-print("czas oczekiwania powyżej 5 min.")
-#save_json_file()
+        except AttributeError:
+            return author, date, paragraphs
+
+        else:
+
+            added = article_div.find('div', class_='dodano-2').get_text()
+            if added:
+
+                # -- author
+                author_match = re.search(
+                    r'(Autor: (?P<author>(\w+[\s-])+\w+))', added)
+                if author_match:
+                    author = author_match.group('author')
+
+                # -- date
+                date_match = re.search(
+                    r'(dodano: (?P<date>(\d+[,-:\.\s]){3}))', added)
+                if date_match:
+                    date = date_match.group('date')
+
+            # -- paragraphs
+            for paragraph_text in article_div.find_all('p'):
+                paragraphs.append(paragraph_text.get_text())
+
+        return author, date, paragraphs
+
+    #
+    # GENERAL
+    #
+    def get_urls_by_pattern(self, page, pattern):
+
+        pattern = re.compile(pattern)
+
+        return set([
+            os.path.join(self.main_url, a.attrs['href'])
+            for a in page.find_all('a', href=pattern)
+            if 'href' in a.attrs
+        ])
+
+    def get_page(self, url):
+
+        time.sleep(self.request_lag_seconds)
+        return BeautifulSoup(requests.get(url).content, 'html.parser')

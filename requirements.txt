@@ -10,3 +10,6 @@ soupsieve==1.9.1
 
 # -- for http traffic
 requests==2.21.0
+
+# -- for command line interface
+Click==7.0
