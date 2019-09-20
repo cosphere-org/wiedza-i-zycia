@@ -1,53 +1,20 @@
 
-var m_c_pos = 0.1;
+// var m_c_pos = 0.1;
 var m_c = "main-container";
 
 function displayWindowSize(m_c){
 
-  var window_width = window.innerWidth;
-  var window_height = window.innerHeight;
-    
-  document.getElementById(m_c).style.top = (window_height*m_c_pos).toString() + "px"; 
-  document.getElementById(m_c).style.left = (window_width*m_c_pos).toString() + "px";
+  // var window_width = window.innerWidth;
+  // var window_height = window.innerHeight;
+
+  // document.getElementById(m_c).style.top = (window_height*m_c_pos).toString() + "px";
+  // document.getElementById(m_c).style.left = (window_width*m_c_pos).toString() + "px";
 }
- 
+
 window.addEventListener("resize", function(){
   displayWindowSize(m_c)
 });
 displayWindowSize(m_c);
-
-var xmlhttp = new XMLHttpRequest();
-xmlhttp.onreadystatechange = function() {
-  if (this.readyState == 4 && this.status == 200) {
-    var myObj = JSON.parse(this.responseText);
-
-      var pos = {
-        x: 40,
-        y: -50,
-      }
-      var edition_count = myObj.length;
-      var row = Math.ceil(Math.sqrt(edition_count))
-      console.log(row)
-      var row_pos = 0;
-      myObj.forEach(function(edition) {
-        if(row_pos>=row){
-          pos.x = 40
-          pos.y += 110;
-          row_pos = 0;
-        }
-        pos.x += 90;
-        appendImg(edition["image"], pos);
-        row_pos += 1;
-        // console.log(edition["image"])
-        edition["articles"].forEach(function(article){
-          // console.log(article)
-        });
-      });
-    // console.log(myObj[0]["articles"][0]);
-  }
-};
-xmlhttp.open("GET", "editions.json", true);
-xmlhttp.send();
 
 var svg = d3.select("#main-container")
   .append("svg")
@@ -63,6 +30,30 @@ var svg = d3.select("#main-container")
         svg.attr("transform", d3.event.transform)
       }
 }))
+
+var myObj = editions;
+
+var pos = {
+  x: 40,
+  y: -50,
+}
+var edition_count = myObj.length;
+var row = Math.ceil(Math.sqrt(edition_count))
+console.log(row)
+var row_pos = 0;
+myObj.forEach(function(edition) {
+  if(row_pos>=row){
+    pos.x = 40
+    pos.y += 110;
+    row_pos = 0;
+  }
+  pos.x += 90;
+  appendImg(edition["image"], pos);
+  row_pos += 1;
+  edition["articles"].forEach(function(article){
+  });
+});
+
 
 d3.select("#main-container")
     .call(
