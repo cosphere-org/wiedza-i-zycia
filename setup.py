@@ -42,4 +42,8 @@ setup(
     packages=find_packages(),
     install_requires=requirements,
     package_data={'': ['requirements.txt']},
+    entry_points='''
+        [console_scripts]
+        scraper=wiedza_i_zycie.cli:cli
+    ''',
     include_package_data=True)

@@ -23,8 +23,7 @@ from scraper import (
     get_table_of_contents,
     save_image_file,
     save_json_file,
-    )
-
+)
 
 
 class GetSoupTestCase(TestCase):
@@ -160,8 +159,8 @@ class GetArticleAuthorDate(TestCase):
     def test_get_article_author_date(self):
         wiz_author_date = BeautifulSoup(
             '''
-            <div class="dodano-2" style="float: left; 
-            margin-bottom: 1px;">Autor: <strong>Magdalena Nowicka-Franczak</strong> 
+            <div class="dodano-2" style="float: left;
+            margin-bottom: 1px;">Autor: <strong>Magdalena Nowicka-Franczak</strong>
             |  dodano: 2019-04-24</div>
             '''.replace("\n", "")
             ,'html.parser')
@@ -170,7 +169,7 @@ class GetArticleAuthorDate(TestCase):
 
         wiz_author_date = BeautifulSoup(
             '''
-            <div class="dodano-2" style="float: left; 
+            <div class="dodano-2" style="float: left;
             margin-bottom: 1px" ;="">dodano: 2019-03-20</div>
             '''.replace("\n", "")
             ,'html.parser')
@@ -241,7 +240,7 @@ class GetArticleDictTestCase(TestCase):
 class GetLinkListTestCase(TestCase):
 
     def test_get_link_list__no_links(self):
-        links = get_link_list('(10,.+html)$', 
+        links = get_link_list('(10,.+html)$',
         BeautifulSoup(
         b'''
         <html>
@@ -257,7 +256,7 @@ class GetLinkListTestCase(TestCase):
 
 
     def test_get_link_list__find_all_links(self):
-        links = get_link_list('(10,.+html)$', 
+        links = get_link_list('(10,.+html)$',
         BeautifulSoup(
         b'''
         <html>
@@ -380,8 +379,8 @@ class GetEditionDictTestCase(TestCase):
         assert get_edition_dict(BeautifulSoup(
         '''
         <div class="box-czasopisma-pokaz">
-            <img 
-                class="maxi-pokaz-cz" 
+            <img
+                class="maxi-pokaz-cz"
                 src="images/q7486a3ey2ttwe5ieu1o38hrdw5q6h3r893bgrc.jpg">
             <div style="padding-top: 35px; margin-bottom: 10px;">
                 <strong>W numerze m.in.:</strong>
@@ -406,7 +405,7 @@ class GetEditionDictTestCase(TestCase):
                 <strong>W numerze m.in.:</strong>
             </div>
                 <div style="margin-bottom: 15px">
-                         
+
                 </div>
         </div>
         ''',
@@ -418,7 +417,7 @@ class GetJsonPageDictTestCase(TestCase):
 
     @httpretty.activate
     def test_get_json_page_dict(self):
-        
+
         httpretty.register_uri(
             httpretty.GET,
             'https://www.wiz.pl/18.html',

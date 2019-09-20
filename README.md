@@ -1,4 +1,5 @@
-# Wiedza i Życie - scraper
+
+# Wiedza i Życie - Scraper
 ___________________________
 
 ### Prerequisites
@@ -12,16 +13,47 @@ ___________________________
 
 in bash run following command
 
-```
+```bash
 make install
 ```
 ___________________________
 
-### To Run
+### Building Command
 
-in bash run following command
+in order to build the command for scraper run:
 
-```
-make run
+```bash
+python setup.py develop
 ```
 ___________________________
+
+### To see all available CLI commands
+
+
+```bash
+scraper --help
+```
+___________________________
+
+### To scrape all available editions
+
+```bash
+source env.sh && \
+scraper scrape-all-and-save
+```
+___________________________
+
+### To scrape all particular edition (for debugging)
+
+```bash
+source env.sh && \
+scraper scrape-edition https://www.wiz.pl/10,274.html
+```
+___________________________
+
+### To scrape all particular article (for debugging)
+
+```bash
+source env.sh && \
+scraper scrape-article https://www.wiz.pl/8,2116.html
+```
