@@ -1,0 +1,29 @@
+:root {
+    --color-theme: #3D3D4A;
+    --color-track: #343440;
+  }
+
+body {
+    background-color: var(--color-theme);
+}
+
+#super-main-container {
+    height: 100%;
+    width: 100%;
+}
+#main-container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    background-color: var(--color-track);
+/*    -webkit-box-shadow: 0px 1px 13px 5px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 1px 13px 5px rgba(0,0,0,0.75);
+    box-shadow: 0px 1px 13px 5px rgba(0,0,0,0.75);*/
+}
+
+image:hover {
+    filter: brightness(50%);
+    cursor: pointer;
+}
