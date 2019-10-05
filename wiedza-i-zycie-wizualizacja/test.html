@@ -1,208 +1,34 @@
-<!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div id="super-main-container">
+            <div id="main-container">
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    <title>Adding Rectangles</title>
-    <style>
+                <button id="myBtn" ></button>
 
-    div.sample-div {
-        position: absolute;
-        top: 25%;
-        left: 25%;
-        width: 300px;
-        height: 300px;
-        /* background-color: dodgerblue; */
-    }
-    </style>
-</head>
+                <div id="md1" class="modal">
+                    <!-- <div id="articles" class="modal-content">
+                    </div> -->
+                </div>
 
-<body>
-    <div class="sample-div">
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.js"></script>
-    <script type="text/javascript">
-    function SVGCanvas(options) {
-        // An SVG-based drawing
-        var self = this;
+            </div>
+        </div>
+        <script src="https://d3js.org/d3.v4.js"></script>
+        <script>
+            var md = "#md1";
+            d3.select(md)
+            // d3.select("#md1")
+            // .append("image")
+            // .attr("xlink:href", "images/"+imag.toString())
+            .append("img")
+            .attr("src", "images/"+imag.toString())
+            .attr("height", "100px")
+            .attr("width", "100px")
 
-        // Define the global SVG options
-        this.options = options || {};
-        this.options.h = options.h || "100%"; // SVG Height and Width
-        this.options.w = options.w || "100%";
-        this.options.addTo = options.addTo || 'body'; // Where to add the SVG (a css selector)
-        this.options.addBorderRect = options.addBorderRect || true; // Whether to add a border around the SVG.
-
-        // Make the SVG 
-        this.svg = d3.select(this.options.addTo)
-            .append('svg')
-            .attr('height', this.options.h)
-            .attr('width', this.options.w)
-            .attr('class', 'display-svg');
-
-        // Add border if requested
-        if (this.options.addBorderRect) {
-            this.svg.append('rect')
-                .attr('height', this.options.h)
-                .attr('width', this.options.w)
-                .attr('stroke', 'black')
-                .attr('stroke-width', 4)
-                .attr('opacity', 0.25)
-                .attr('fill-opacity', 0.0)
-                .attr('class', 'border-rect');
-        }
-
-        // Add zoom and pan group
-        this.zoomG = this.svg
-            .append('g')
-            .attr('class', 'zoom-group');
-
-        // Rectangles
-        this.Rect = {
-            'r': null,
-            'x0': null,
-            'y0': null,
-        }; // Current Selection
-        this.Rects = []; // Collection
-        
-        // Transformation state
-        this.transform = d3.zoomTransform(this.zoomG.node());
-
-        // Load methods for behaviors
-        this.makeZoomPan(); // SVG Zooming and Panning Methods
-        this.makeDragBehavior();
-
-        // Dragging Behavior - account for both addRect and pan.
-        this.svg.call(
-            d3.drag()
-            .on('start', self.dragBehavior.start())
-            .on('drag', self.dragBehavior.drag())
-            .on('end', self.dragBehavior.end())
-        );
-
-        // Zooming behavior
-        this.svg.call(
-                d3.zoom()
-                .scaleExtent([1, 10])
-                .on('zoom', this.zoomPan.zoom)
-            )
-            .on('.zoom', this.zoomPan.zoom)
-            .on('mousedown.zoom', null)
-            .on('mousemove.zoom', null)
-            .on('mouseup.zoom', null);
-    }
-
-
-    SVGCanvas.prototype.makeZoomPan = function() {
-        // Defines zooming and panning behavior from zoom listener
-
-        var self = this;
-
-        zoom = function() {
-            self.transform = d3.event.transform;
-
-            self.zoomG.attr('transform', self.transform);
-
-            // Go back to initial position if zoomed out.
-            if (d3.event.transform.k === 1) {
-                self.zoomG
-                    .transition(d3.transition()
-                        .duration(100)
-                        .ease(d3.easeLinear))
-                    .attr('transform', 'translate(0,0) scale(1, 1)');
-
-                self.transform = d3.zoomTransform(self.zoomG.node());
-            }
-        }
-
-        var pan = function() {
-            var m = d3.event;
-            self.transform.x += m.dx;
-            self.transform.y += m.dy;
-
-            // Update Attribute
-            d3.select('g.zoom-group').attr('transform', self.transform);
-        }
-
-        self.zoomPan = {
-            zoom: zoom,
-            pan: pan
-        };
-
-    }
-
-    SVGCanvas.prototype.mouseOffset = function() {
-        var m = d3.event;
-        m.x = (-this.transform.x + m.x) / this.transform.k;
-        m.y = (-this.transform.y + m.y) / this.transform.k;
-        return m;
-    }
-
-    SVGCanvas.prototype.makeDragBehavior = function() {
-        var self = this;
-
-        var start = function() {
-            return function() {
-                if (!d3.event.sourceEvent.shiftKey) {
-                    self.addRect.start();
-                }
-                if (d3.event.sourceEvent.shiftKey) {
-                    null;
-                }
-            }
-        }
-
-
-        var drag = function() {
-            return function() {
-                if (!(self.Rect.r === null) && !(d3.event.sourceEvent.shiftKey)) {
-                    self.addRect.drag();
-                }
-                if (d3.event.sourceEvent.shiftKey) {
-                    self.zoomPan.pan();
-                }
-            }
-        }
-
-        var end = function() {
-            return function() {
-                if (!(self.Rect.r === null) & !(d3.event.sourceEvent.shiftKey)) {
-                    self.addRect.end();
-                }
-                if (d3.event.sourceEvent.shiftKey) {
-                    null;
-                }
-            }
-        }
-
-        self.dragBehavior = {
-            start: start,
-            drag: drag,
-            end: end
-        };
-    }
-
-    /**********
-        SETUP
-    **********/
-    options = {
-        h: "100%",
-        w: "100%",
-        addTo: '.sample-div',
-        addBorderRect: true,
-    }
-
-    SVGCanvas.prototype.makePicts = function() {
-        d3.select("svg")
-        .append("image")
-        .attr("xlink:href", "images/0a5bf73be91895902a141c46f2ed2be8.jpg")
-        .attr("height", "100px")
-        .attr("width", "100px")
-    }
-
-    var c = new SVGCanvas(options);
-    c.makePicts();
-    </script>
-</body>
-
+        </script>
+        <script src="editions.js"></script>
+    </body>
 </html>
