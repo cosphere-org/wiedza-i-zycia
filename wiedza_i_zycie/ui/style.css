@@ -45,7 +45,7 @@ body {
 .editionImg {
     position: absolute;
     transform-origin: 0 0;
-    display: None;
+    display: none;
     height: 200px;
     width: auto;
 }

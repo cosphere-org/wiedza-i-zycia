@@ -46,7 +46,7 @@ class WiedzaIZycieScraper:
 
         with open(path, 'w') as f:
             f.write(
-                'editions = ' + json.dumps(
+                'data = ' + json.dumps(
                     editions,
                     indent=4,
                     sort_keys=True))
