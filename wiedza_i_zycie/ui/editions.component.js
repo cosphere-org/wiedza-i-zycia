@@ -76,6 +76,7 @@ class EditionsGridComponent {
   /**
    * BEHAVIOUR
    */
+  
   activaZoom() {
     this.parentd3El.call(
       d3.zoom().on('zoom', () => {
@@ -84,21 +85,25 @@ class EditionsGridComponent {
         this.d3El.style(
           'transform',
           `translate(${t.x}px, ${t.y}px) scale(${t.k})`);
+
+        // this.d3El.attr(
+        //   'transform', t
+        // );
       }));
   }
 
-  activeModal(buttonId){
-    var modal = document.getElementById("modal");
-    var btn = document.getElementById(buttonId);
 
-    btn.onclick = function() {
-      modal.style.display = "block";
-    }
+  // activaZoom() {
+  //   this.parentd3El.call(
+  //     d3.behavior.zoom().on("zoom", function () {
+  //         svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+  //       })
+  //     );
+  // }
 
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-  }
+  // .call(d3.behavior.zoom().on("zoom", function () {
+  //   svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+  // }))
+  // .append("g")
+
 }
