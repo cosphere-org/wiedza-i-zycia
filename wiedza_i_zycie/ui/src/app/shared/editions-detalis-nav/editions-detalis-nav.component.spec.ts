@@ -7,15 +7,15 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
-import { RightNavComponent } from './right-nav.component';
+import { EditionsDetalisNavComponent } from './editions-detalis-nav.component';
 
-describe('RightNavComponent', () => {
-  let component: RightNavComponent;
-  let fixture: ComponentFixture<RightNavComponent>;
+describe('EditionsDetalisNavComponent', () => {
+  let component: EditionsDetalisNavComponent;
+  let fixture: ComponentFixture<EditionsDetalisNavComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [RightNavComponent],
+      declarations: [EditionsDetalisNavComponent],
       imports: [
         NoopAnimationsModule,
         LayoutModule,
@@ -29,7 +29,7 @@ describe('RightNavComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RightNavComponent);
+    fixture = TestBed.createComponent(EditionsDetalisNavComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

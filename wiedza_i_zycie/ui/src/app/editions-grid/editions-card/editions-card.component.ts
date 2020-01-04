@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { WizDataService } from '../../wiz-data.service';
+// import { WizDataService } from '../wiz-data.service';
 import { debug } from 'util';
 import { Input } from '@angular/core';
 
@@ -15,7 +15,7 @@ export class EditionsCardComponent  {
 
   @Input() src;
   constructor(
-    private wizDataService: WizDataService
+    // private wizDataService: WizDataService
   ) { }
 
   ngOnInit() {
