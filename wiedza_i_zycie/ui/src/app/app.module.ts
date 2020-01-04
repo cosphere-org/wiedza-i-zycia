@@ -14,7 +14,7 @@ import { MainViewComponent } from './main-view/main-view.component';
 import { RouterModule } from '@angular/router';
 import { RightNavComponent } from './@shared/right-nav/right-nav.component';
 
-// import { SharedDependenciesModule} from './shared-dependencies/shared-dependencies.module'
+import { SharedDependenciesModule} from './shared-dependencies/shared-dependencies.module'
 
 @NgModule({
   declarations: [
@@ -33,7 +33,7 @@ import { RightNavComponent } from './@shared/right-nav/right-nav.component';
     FlexLayoutModule,
     FormsModule,
     HttpClientModule,
-    // SharedDependenciesModule,
+    SharedDependenciesModule,
     RouterModule.forRoot([
       { path: '', component: MainViewComponent },
     ])

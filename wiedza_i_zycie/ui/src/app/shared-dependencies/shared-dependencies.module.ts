@@ -8,8 +8,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
-// export { MatIconModule } from '@angular/material/icon';
-// export { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [],
@@ -25,7 +23,14 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatGridListModule,
   ],
   exports: [
+    MatToolbarModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatListModule,
+    MatInputModule,
     MatCardModule,
+    MatGridListModule,
   ]
 })
 export class SharedDependenciesModule { }
