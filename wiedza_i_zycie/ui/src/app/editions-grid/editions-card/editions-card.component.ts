@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 
-import { WizDataService } from '../wiz-data.service';
+import { WizDataService } from '../../wiz-data.service';
 import { debug } from 'util';
 import { Input } from '@angular/core';
 
-
 @Component({
-  selector: 'app-card',
-  templateUrl: './card.component.html',
-  styleUrls: ['./card.component.scss']
+  selector: 'app-editions-card',
+  templateUrl: './editions-card.component.html',
+  styleUrls: ['./editions-card.component.scss']
 })
 
-export class CardComponent implements OnInit {
+export class EditionsCardComponent  {
+  // implements OnInit
 
   @Input() src;
   constructor(

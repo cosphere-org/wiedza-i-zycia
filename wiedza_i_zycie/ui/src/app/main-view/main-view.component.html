@@ -14,9 +14,11 @@
 
     <ng-container *ngFor="let wiz of wizData">
 
-		<app-card
+		<app-editions-card
       [src]="'/assets/images/' + wiz['image']"
-    ></app-card>
+    ></app-editions-card>
 
 	</ng-container>
 </div>
+
+<app-navigation></app-navigation>
