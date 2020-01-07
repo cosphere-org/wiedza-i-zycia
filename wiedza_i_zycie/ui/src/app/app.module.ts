@@ -7,26 +7,26 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FlexLayoutModule } from '@angular/flex-layout/';
 import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
 
-import { SharedDependenciesModule} from './shared-dependencies/shared-dependencies.module'
+import { SharedDependenciesModule} from './shared-dependencies/shared-dependencies.module';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component'
+import { EditionsGridModule} from './editions-grid/editions-grid.module'
 
 @NgModule({
   declarations: [
     AppComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     LayoutModule,
     FlexLayoutModule,
     FormsModule,
     HttpClientModule,
     SharedDependenciesModule,
-    RouterModule.forRoot([
-      // { path: '', component: MainViewComponent },
-    ])
+    EditionsGridModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
