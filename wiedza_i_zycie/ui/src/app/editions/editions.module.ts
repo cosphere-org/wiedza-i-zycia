@@ -7,6 +7,8 @@ import { EditionDetalisComponent } from './edition-detalis/edition-detalis.compo
 import { EditionsGridComponent } from './editions-grid/editions-grid.component'
 import { EditionsComponent } from './editions.component'
 import { WizDataService } from './wiz-data.service';
+import { NavCommunicationService } from 'src/app/shared/nav-communication.service';
+
 
 @NgModule({
   imports: [
@@ -15,6 +17,7 @@ import { WizDataService } from './wiz-data.service';
   ],
   providers: [
     WizDataService,
+    NavCommunicationService,
   ],
   declarations: [
     EditionsCardComponent,

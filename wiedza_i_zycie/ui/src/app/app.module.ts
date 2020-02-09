@@ -10,12 +10,15 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { SharedDependenciesModule} from './shared-dependencies/shared-dependencies.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component'
-import { EditionsModule } from './editions/editions.module'
+import { EditionsModule } from './editions/editions.module';
+import { SharedModule } from './shared/shared.module'
+import { MainViewComponent } from './main-view/main-view.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     PageNotFoundComponent,
+    MainViewComponent,
   ],
   imports: [
     BrowserModule,
@@ -26,6 +29,7 @@ import { EditionsModule } from './editions/editions.module'
     HttpClientModule,
     SharedDependenciesModule,
     EditionsModule,
+    SharedModule,
     AppRoutes,
   ],
   providers: [],

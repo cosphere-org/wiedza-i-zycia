@@ -21,13 +21,13 @@ export class EditionsGridComponent implements OnInit {
     });
   }
 
-  getData(){
-    this.wizDataService.getWizJson().subscribe(data => {
-      // console.log(data);
-      this.editionsData = data;
-      // return data; 
-    });
-  }
+  // getData(){
+  //   this.wizDataService.getWizJson().subscribe(data => {
+  //     // console.log(data);
+  //     this.editionsData = data;
+  //     // return data; 
+  //   });
+  // }
 
   getPath(){
 

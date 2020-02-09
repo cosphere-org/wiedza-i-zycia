@@ -10,6 +10,8 @@ import { map, shareReplay } from 'rxjs/operators';
 })
 export class NavigationComponent {
 
+  sideBarIsOpened = false;
+
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
@@ -17,5 +19,9 @@ export class NavigationComponent {
     );
 
   constructor(private breakpointObserver: BreakpointObserver) {}
+
+  toggleSideBar(shouldOpen: boolean) {
+    this.sideBarIsOpened = !this.sideBarIsOpened;
+  }
 
 }
