@@ -20,7 +20,15 @@ export class EditionsGridComponent implements OnInit {
       this.editionsData = data;
     });
   }
-  
+
+  // getData(){
+  //   this.wizDataService.getWizJson().subscribe(data => {
+  //     // console.log(data);
+  //     this.editionsData = data;
+  //     // return data; 
+  //   });
+  // }
+
   getPath(){
 
   }
