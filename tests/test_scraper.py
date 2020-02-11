@@ -1,6 +1,5 @@
 import hashlib
 import os
-import re
 import time
 from unittest import TestCase
 
@@ -17,12 +16,10 @@ from scraper import (
     get_edition_dict,
     get_image,
     get_image_name,
-    get_json_page_dict,
     get_link_list,
     get_soup,
     get_table_of_contents,
     save_image_file,
-    save_json_file,
 )
 
 
@@ -160,10 +157,10 @@ class GetArticleAuthorDate(TestCase):
         wiz_author_date = BeautifulSoup(
             '''
             <div class="dodano-2" style="float: left;
-            margin-bottom: 1px;">Autor: <strong>Magdalena Nowicka-Franczak</strong>
+            margin-bottom: 1px;">Autor: <strong>Magdalena
+            Nowicka-Franczak</strong>
             |  dodano: 2019-04-24</div>
-            '''.replace("\n", "")
-            ,'html.parser')
+            '''.replace("\n", ""), 'html.parser')
         assert get_article_author_date(wiz_author_date) == (
             'Magdalena Nowicka-Franczak', '2019-04-24')
 
@@ -171,11 +168,9 @@ class GetArticleAuthorDate(TestCase):
             '''
             <div class="dodano-2" style="float: left;
             margin-bottom: 1px" ;="">dodano: 2019-03-20</div>
-            '''.replace("\n", "")
-            ,'html.parser')
+            '''.replace("\n", ""), 'html.parser')
         assert get_article_author_date(wiz_author_date) == (
             None, '2019-03-20')
-
 
 
 class GetArticleDictTestCase(TestCase):
@@ -197,8 +192,10 @@ class GetArticleDictTestCase(TestCase):
             <html>
                 <body>
                     <div class="box-teksty-pokaz">
-                        <div class="naglowek-teksty">Moc kłamstwa, urok plotki, smak zemsty</div>
-                        <div class="dodano-2">Autor: Przemek Berg | dodano: 2016-12-09</div>
+                        <div class="naglowek-teksty">Moc kłamstwa, urok plotki,
+                        smak zemsty</div>
+                        <div class="dodano-2">Autor: Przemek Berg | dodano:
+                        2016-12-09</div>
                         <p>This is a paragraph.</p>
                         <p>This is another paragraph.</p>
                     </div>
@@ -207,15 +204,15 @@ class GetArticleDictTestCase(TestCase):
             '''.encode('utf8'),
             'html.parser'), 'https://www.wiz.pl')
 
-          ###################PYTANIE#######################
-
         self.article_dict_full = get_article_dict(BeautifulSoup(
             '''
             <html>
                 <body>
                     <div class="box-teksty-pokaz">
-                        <div class="naglowek-teksty">Moc kłamstwa, urok plotki, smak zemsty</div>
-                        <div class="dodano-2">Autor: Przemek Berg | dodano: 2016-12-09</div>
+                        <div class="naglowek-teksty">Moc kłamstwa, urok plotki,
+                         smak zemsty</div>
+                        <div class="dodano-2">Autor: Przemek Berg | dodano:
+                        2016-12-09</div>
                         <p>This is a paragraph.</p>
                         <p>This is another paragraph.</p>
                     </div>
@@ -224,102 +221,102 @@ class GetArticleDictTestCase(TestCase):
             ''',
             'html.parser'), 'https://www.wiz.pl')
 
-
     def test_get_article_dict__no_title(self):
         assert self.article_dict_lack.get('title') == 'None'
-
 
     def test_get_article_dict__no_article(self):
         assert self.article_dict_lack.get('body') == []
 
-
     def test_get_article_dict__no_author_and_date(self):
-        assert self.article_dict_lack.get('author_and_date') == None
+        assert self.article_dict_lack.get('author_and_date') == 'None'
 
 
 class GetLinkListTestCase(TestCase):
 
     def test_get_link_list__no_links(self):
-        links = get_link_list('(10,.+html)$',
-        BeautifulSoup(
-        b'''
-        <html>
-            <body>
-                <p>This is a paragraph.</p>
-                <p>This is another paragraph.</p>
-            </body>
-        </html>
-        ''',
-        'html.parser'))
+        links = get_link_list(
+            '(10,.+html)$',
+            BeautifulSoup(
+                b'''
+                <html>
+                    <body>
+                        <p>This is a paragraph.</p>
+                        <p>This is another paragraph.</p>
+                    </body>
+                </html>
+                ''',
+                'html.parser'))
         for link in links:
             assert link is None
 
-
     def test_get_link_list__find_all_links(self):
-        links = get_link_list('(10,.+html)$',
-        BeautifulSoup(
-        b'''
-        <html>
-            <body>
-                <p>This is a paragraph.</p>
-                <p>This is another paragraph.</p>
-                <a href='10,271.html'>
-                <a href='10,161.html'>
-                <a href='10,261.html'>
-                <a href='10,291.html'>
-            </body>
-        </html>
-        ''',
-        'html.parser'))
+        links = get_link_list(
+            '(10,.+html)$',
+            BeautifulSoup(
+                b'''
+                <html>
+                    <body>
+                        <p>This is a paragraph.</p>
+                        <p>This is another paragraph.</p>
+                        <a href='10,271.html'>
+                        <a href='10,161.html'>
+                        <a href='10,261.html'>
+                        <a href='10,291.html'>
+                    </body>
+                </html>
+                ''',
+                'html.parser'))
         for link in links:
             assert link is not None
+
 
 class ChangeToSummaryLinkTestCase(TestCase):
 
     def test_change_to_summary_link(self):
         assert change_to_summary_link(
-            "https://www.wiz.pl/10,269.html") == 'https://www.wiz.pl/19,269.html'
+            "https://www.wiz.pl/10,269.html") == 'https://www.wiz.pl/19,269.html' # noqa
         assert change_to_summary_link(
-            "https://www.wiz.pl/10,251.html") == 'https://www.wiz.pl/19,251.html'
+            "https://www.wiz.pl/10,251.html") == 'https://www.wiz.pl/19,251.html' # noqa
 
 
 class GetEditionDateTestCase(TestCase):
 
     def test_get_edition_date__no_edition_date(self):
-        assert get_edition_date(BeautifulSoup(
-        b'''
-        <html>
-            <body>
-                <p>This is a paragraph.</p>
-                <p>This is another paragraph.</p>
-                <a href='10,271.html'>
-                <a href='10,161.html'>
-                <a href='10,261.html'>
-                <a href='10,291.html'>
-            </body>
-        </html>
-        ''',
-        'html.parser')) is None
-
+        assert get_edition_date(
+            BeautifulSoup(
+                b'''
+                <html>
+                    <body>
+                        <p>This is a paragraph.</p>
+                        <p>This is another paragraph.</p>
+                        <a href='10,271.html'>
+                        <a href='10,161.html'>
+                        <a href='10,261.html'>
+                        <a href='10,291.html'>
+                    </body>
+                </html>
+                ''',
+                'html.parser')) is None
 
     def test_get_edition_date__is_edition_date(self):
-        assert get_edition_date(BeautifulSoup(
-        '''
-        <html>
-            <body>
-                <p>This is a paragraph.</p>
-                <p>This is another paragraph.</p>
-                <a href='10,271.html'>
-                <a href='10,161.html'>
-                <a href='10,261.html'>
-                <a href='10,291.html'>
-                <div style="margin-top: 0px;">
-                    <div>Wiedza i Życie  03/2019</div>
-                </div>
-            </body>
-        </html>
-        ''',
-        'html.parser')) == '03/2019'
+        assert get_edition_date(
+            BeautifulSoup(
+                '''
+                <html>
+                    <body>
+                        <p>This is a paragraph.</p>
+                        <p>This is another paragraph.</p>
+                        <a href='10,271.html'>
+                        <a href='10,161.html'>
+                        <a href='10,261.html'>
+                        <a href='10,291.html'>
+                        <div style="margin-top: 0px;">
+                            <div>Wiedza i Życie  03/2019</div>
+                        </div>
+                    </body>
+                </html>
+                ''',
+                'html.parser')) == '03/2019'
 
 
 class GetTableOfContentsTestCase(TestCase):
@@ -336,16 +333,16 @@ class GetTableOfContentsTestCase(TestCase):
         'html.parser')
 
         assert get_table_of_contents(table)[0] == {
-                    'title' : "Biometeorologia",
-                    'subTitle' : "Siódme poty; Andrzej Hołdys"
+                    'title': "Biometeorologia",
+                    'subTitle': "Siódme poty; Andrzej Hołdys"
                     }
         assert get_table_of_contents(table)[1] == {
-                    'title' : "Fizjologia",
-                    'subTitle' : "Kriorewolucja; Katarzyna Kornicka"
+                    'title': "Fizjologia",
+                    'subTitle': "Kriorewolucja; Katarzyna Kornicka"
                     }
         assert get_table_of_contents(table)[2] == {
-                    'title' : "Technika",
-                    'subTitle' : "Węsząca elektronika; Justyna Jońca"
+                    'title': "Technika",
+                    'subTitle': "Węsząca elektronika; Justyna Jońca"
                     }
 
     def test_get_table_of_contents__troublesome_case(self):
@@ -360,16 +357,16 @@ class GetTableOfContentsTestCase(TestCase):
         'html.parser')
 
         assert get_table_of_contents(table)[0] == {
-                'title' : "Astronomia",
-                'subTitle' : "Kosmiczny pan i pani Smith; Paweł Ziemnicki"
+                'title': "Astronomia",
+                'subTitle': "Kosmiczny pan i pani Smith; Paweł Ziemnicki"
                 }
         assert get_table_of_contents(table)[1] == {
-                    'title' : "Technika",
-                    'subTitle' : "Dyktafon w pluszaku; Andrzej Janikowski"
+                    'title': "Technika",
+                    'subTitle': "Dyktafon w pluszaku; Andrzej Janikowski"
                     }
         assert get_table_of_contents(table)[3] == {
-                    'title' : "Chemia",
-                    'subTitle' : "Jak to z tlenem było; Krzysztof Orliński"
+                    'title': "Chemia",
+                    'subTitle': "Jak to z tlenem było; Krzysztof Orliński"
                     }
 
 
@@ -395,22 +392,22 @@ class GetEditionDictTestCase(TestCase):
         ''',  # noqa
         'html.parser'), 'www.wiz.pl').get("table_of_contents") is not None
 
-
     def test_get_edition_dict__no_summary_body(self):
-        assert get_edition_dict(BeautifulSoup(
-        '''
-        <div class="box-czasopisma-pokaz">
-            <img class="maxi-pokaz-cz" src="images/q7486a3ey2ttwe5ieu1o38hrdw5q6h3r893bgrc.jpg">
-            <div style="padding-top: 35px; margin-bottom: 10px;">
-                <strong>W numerze m.in.:</strong>
-            </div>
-                <div style="margin-bottom: 15px">
+        assert get_edition_dict(
+            BeautifulSoup(
+                '''
+                <div class="box-czasopisma-pokaz">
+                    <img class="maxi-pokaz-cz" src="images/
+                    q7486a3ey2ttwe5ieu1o38hrdw5q6h3r893bgrc.jpg">
+                    <div style="padding-top: 35px; margin-bottom: 10px;">
+                        <strong>W numerze m.in.:</strong>
+                    </div>
+                        <div style="margin-bottom: 15px">
 
+                        </div>
                 </div>
-        </div>
-        ''',
-        'html.parser'), 'www.wiz.pl').get("table_of_contents") == []
-
+                ''',
+                'html.parser'), 'www.wiz.pl').get("table_of_contents") == []
 
 
 class GetJsonPageDictTestCase(TestCase):
@@ -429,7 +426,8 @@ class GetJsonPageDictTestCase(TestCase):
                 <p>This is another paragraph.</p>
                 <a href='10,271.html'>
                 <a href='10,161.html'>
-                <div style="margin-top: 0px;"><div>Wiedza i Życie  03/2019</div></div>
+                <div style="margin-top: 0px;"><div>Wiedza i Życie
+                03/2019</div></div>
             </body>
         </html>
         ''')
@@ -447,29 +445,27 @@ class GetJsonPageDictTestCase(TestCase):
                 <a href='10,161.html'>
                 <a href='10,261.html'>
                 <a href='10,291.html'>
-                <div style="margin-top: 0px;"><div>Wiedza i Życie  03/2019</div></div>
+                <div style="margin-top: 0px;"><div>Wiedza i Życie
+                03/2019</div></div>
             </body>
         </html>
         ''')
-#######poprawapoprawapoprawapoprawa################
-
-
 
     @httpretty.activate
     def test_get_json_page_dict__no_links(self):
 
         httpretty.register_uri(
-        httpretty.GET,
-        'https://www.wiz.pl/18.html',
-        status=200,
-        body='''
-    <html>
-        <body>
-        </body>
-    </html>
-    ''')
+            httpretty.GET,
+            'https://www.wiz.pl/18.html',
+            status=200,
+            body='''
+            <html>
+                <body>
+                </body>
+            </html>
+            ''')
 
-        #assert get_json_page_dict() == 'No links'
+        # assert get_json_page_dict() == 'No links'
 
 
 class SaveJsonFileTestCase(TestCase):
@@ -486,5 +482,3 @@ class SaveJsonFileTestCase(TestCase):
         # save_json_file()
 
         # assert json.loads(self.tmpdir.join('data.json').read()) == {}
-
-#######poprawapoprawapoprawapoprawa################

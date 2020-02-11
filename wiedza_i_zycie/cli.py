@@ -44,7 +44,6 @@ def scrape_article(url):
 @click.group()
 def cli():
     """Expose multiple commands allowing one to work with lily_assistant."""
-
     pass
 
 

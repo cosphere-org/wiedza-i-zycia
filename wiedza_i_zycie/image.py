@@ -2,6 +2,7 @@
 import hashlib
 import os
 import re
+import click
 
 import requests
 
