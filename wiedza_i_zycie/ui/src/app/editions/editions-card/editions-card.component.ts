@@ -1,10 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-
-// import { WizDataService } from '../wiz-data.service';
-import { debug } from 'util';
-import { Input } from '@angular/core';
-import { NavCommunicationService } from 'src/app/shared/nav-communication.service';
-
+import { Component, Output, Input, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-editions-card',
@@ -13,23 +7,9 @@ import { NavCommunicationService } from 'src/app/shared/nav-communication.servic
 })
 
 export class EditionsCardComponent  {
-  // implements OnInit
 
-  @Input() src
-  @Input() date 
+  @Input() edition;
 
-  constructor(
-    // private wizDataService: WizDataService
-    private navCommunicationService: NavCommunicationService
-  ) { }
-
-  ngOnInit() {
-    // console.log(this.src);
-    // console.log(this.editionProps);
-  }
-
-  showDetalis(){
-    this.navCommunicationService.toggle();
-  }
+  @Output() selected: EventEmitter<string> = new EventEmitter<string>();
 
 }

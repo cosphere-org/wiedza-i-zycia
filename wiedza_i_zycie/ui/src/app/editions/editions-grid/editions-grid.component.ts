@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { WizDataService } from '../wiz-data.service';
 
 @Component({
@@ -8,26 +8,19 @@ import { WizDataService } from '../wiz-data.service';
 })
 export class EditionsGridComponent implements OnInit {
 
-  editionsData;
+  @Output() editionSelected: EventEmitter<string> = new EventEmitter<string>();
+
+  editions;
 
   constructor(
     private wizDataService: WizDataService
   ) { }
 
   ngOnInit() {
-    this.wizDataService.getWizJson().subscribe(data => {
-      console.log(data[0]);
-      this.editionsData = data;
+    this.wizDataService.getWizJson().subscribe(editions => {
+      this.editions = editions;
     });
   }
-
-  // getData(){
-  //   this.wizDataService.getWizJson().subscribe(data => {
-  //     // console.log(data);
-  //     this.editionsData = data;
-  //     // return data; 
-  //   });
-  // }
 
   getPath(){
 
