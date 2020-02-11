@@ -234,36 +234,38 @@ class GetArticleDictTestCase(TestCase):
 class GetLinkListTestCase(TestCase):
 
     def test_get_link_list__no_links(self):
-        links = get_link_list('(10,.+html)$',
-                              BeautifulSoup(
-                                b'''
-                                <html>
-                                    <body>
-                                        <p>This is a paragraph.</p>
-                                        <p>This is another paragraph.</p>
-                                    </body>
-                                </html>
-                                ''',
-                                'html.parser'))
+        links = get_link_list(
+            '(10,.+html)$',
+            BeautifulSoup(
+                b'''
+                <html>
+                    <body>
+                        <p>This is a paragraph.</p>
+                        <p>This is another paragraph.</p>
+                    </body>
+                </html>
+                ''',
+                'html.parser'))
         for link in links:
             assert link is None
 
     def test_get_link_list__find_all_links(self):
-        links = get_link_list('(10,.+html)$',
-                              BeautifulSoup(
-                                b'''
-                                <html>
-                                    <body>
-                                        <p>This is a paragraph.</p>
-                                        <p>This is another paragraph.</p>
-                                        <a href='10,271.html'>
-                                        <a href='10,161.html'>
-                                        <a href='10,261.html'>
-                                        <a href='10,291.html'>
-                                    </body>
-                                </html>
-                                ''',
-                                'html.parser'))
+        links = get_link_list(
+            '(10,.+html)$',
+            BeautifulSoup(
+                b'''
+                <html>
+                    <body>
+                        <p>This is a paragraph.</p>
+                        <p>This is another paragraph.</p>
+                        <a href='10,271.html'>
+                        <a href='10,161.html'>
+                        <a href='10,261.html'>
+                        <a href='10,291.html'>
+                    </body>
+                </html>
+                ''',
+                'html.parser'))
         for link in links:
             assert link is not None
 
@@ -280,39 +282,41 @@ class ChangeToSummaryLinkTestCase(TestCase):
 class GetEditionDateTestCase(TestCase):
 
     def test_get_edition_date__no_edition_date(self):
-        assert get_edition_date(BeautifulSoup(
-                                b'''
-                                <html>
-                                    <body>
-                                        <p>This is a paragraph.</p>
-                                        <p>This is another paragraph.</p>
-                                        <a href='10,271.html'>
-                                        <a href='10,161.html'>
-                                        <a href='10,261.html'>
-                                        <a href='10,291.html'>
-                                    </body>
-                                </html>
-                                ''',
-                                'html.parser')) is None
+        assert get_edition_date(
+            BeautifulSoup(
+                b'''
+                <html>
+                    <body>
+                        <p>This is a paragraph.</p>
+                        <p>This is another paragraph.</p>
+                        <a href='10,271.html'>
+                        <a href='10,161.html'>
+                        <a href='10,261.html'>
+                        <a href='10,291.html'>
+                    </body>
+                </html>
+                ''',
+                'html.parser')) is None
 
     def test_get_edition_date__is_edition_date(self):
-        assert get_edition_date(BeautifulSoup(
-                                '''
-                                <html>
-                                    <body>
-                                        <p>This is a paragraph.</p>
-                                        <p>This is another paragraph.</p>
-                                        <a href='10,271.html'>
-                                        <a href='10,161.html'>
-                                        <a href='10,261.html'>
-                                        <a href='10,291.html'>
-                                        <div style="margin-top: 0px;">
-                                            <div>Wiedza i Życie  03/2019</div>
-                                        </div>
-                                    </body>
-                                </html>
-                                ''',
-                                'html.parser')) == '03/2019'
+        assert get_edition_date(
+            BeautifulSoup(
+                '''
+                <html>
+                    <body>
+                        <p>This is a paragraph.</p>
+                        <p>This is another paragraph.</p>
+                        <a href='10,271.html'>
+                        <a href='10,161.html'>
+                        <a href='10,261.html'>
+                        <a href='10,291.html'>
+                        <div style="margin-top: 0px;">
+                            <div>Wiedza i Życie  03/2019</div>
+                        </div>
+                    </body>
+                </html>
+                ''',
+                'html.parser')) == '03/2019'
 
 
 class GetTableOfContentsTestCase(TestCase):
