@@ -1,21 +1,13 @@
-<div
-  class="grid-container">
 
-  <!-- dummy loop -->
-	<!-- <ng-container *ngFor="let _ of [1,2,3,4,5,6,7,8,9,10]">
-		<app-card
-      fxFlex="0 1 calc(33.3% - 32px)"
-      fxFlex.lt-md="0 1 calc(50% - 32px)"
-      fxFlex.lt-sm="100%"
-    ></app-card>
-    </ng-container> -->
+<div class="grid-container">
 
-    <ng-container *ngFor="let edition of editionsData">
+  <ng-container *ngFor="let edition of editionsData">
 
 		<app-editions-card
       [src]="'/assets/images/' + edition['image']"
       [date]="edition['date']"
     ></app-editions-card>
 
-	</ng-container>
+  </ng-container>
+
 </div>
