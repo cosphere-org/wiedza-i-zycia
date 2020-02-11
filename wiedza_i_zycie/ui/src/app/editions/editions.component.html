@@ -1,10 +1,39 @@
 
-<!-- SIDENAV MENU -->
+<mat-sidenav-container>
+  <mat-sidenav
+    #sidenav
+    mode="over"
+  >
+    Tutaj Pan Piotrek może umieścić linki
+  </mat-sidenav>
+  <mat-sidenav
+    #editions
+    mode="over"
+    position="end"
+  >
+    Tutaj pokażemy artykuły dla {{ selectedEditionDate }}
+  </mat-sidenav>
 
-<!-- EDITIONS DETAIL MENU -->
+  <mat-sidenav-content>
+    <!--
+      using content projection to inject a button inside the search bar!
 
+      alternatively one could just create an OUTPUT in the `main-toolbar` and
+      `emit` event every time one would like to see the menu!
+    -->
+    <app-main-toolbar>
+      <button
+        mat-icon-button
+        (click)="sidenav.toggle()"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+    </app-main-toolbar>
 
-<div class="editions-grid-container">
-  <app-editions-grid></app-editions-grid>
-</div>
+    <app-editions-grid
+      (editionSelected)="onEditionSelected($event)"
+    ></app-editions-grid>
 
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
