@@ -1,0 +1,35 @@
+:root {
+    --color-theme: #3D3D4A;
+    --color-track: #343440;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body, div, img {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+body {
+    background-color: var(--color-theme);
+}
+
+img {
+    border-radius: 10%;
+}
+
+image :hover {
+    filter: brightness(50%);
+    cursor: pointer;
+}
+
+img:hover {
+    filter: brightness(50%);
+    cursor: pointer;
+}

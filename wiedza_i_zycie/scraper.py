@@ -42,11 +42,11 @@ class WiedzaIZycieScraper:
     def save_editions(self, editions):
 
         path = os.path.join(
-            os.path.dirname(__file__), 'data', 'editions.json')
+            os.path.dirname(__file__), 'data', 'editions.js')
 
         with open(path, 'w') as f:
             f.write(
-                json.dumps(
+                'data = ' + json.dumps(
                     editions,
                     indent=4,
                     sort_keys=True))
