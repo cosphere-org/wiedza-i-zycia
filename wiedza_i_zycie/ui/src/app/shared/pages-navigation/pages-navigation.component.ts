@@ -7,16 +7,12 @@ import { Component, OnInit, HostBinding, Input } from '@angular/core';
 })
 export class PagesNavigationComponent implements OnInit {
 
+  showFiller = false;
+  
   constructor() { }
 
   ngOnInit() {
   }
 
-  @HostBinding('class.is-open') @Input()
-  isOpen = false;
-
-  closeNav() {
-    this.isOpen = !this.isOpen;
-  }
 
 }

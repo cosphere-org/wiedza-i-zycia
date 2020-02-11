@@ -8,12 +8,14 @@ import { EditionsGridComponent } from './editions-grid/editions-grid.component'
 import { EditionsComponent } from './editions.component'
 import { WizDataService } from './wiz-data.service';
 import { NavCommunicationService } from 'src/app/shared/nav-communication.service';
+import { SharedModule } from 'src/app/shared/shared.module'
 
 
 @NgModule({
   imports: [
     CommonModule,
     SharedDependenciesModule,
+    SharedModule,
   ],
   providers: [
     WizDataService,
