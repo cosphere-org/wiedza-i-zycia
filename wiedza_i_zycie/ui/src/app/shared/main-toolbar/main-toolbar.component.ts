@@ -14,9 +14,4 @@ export class MainToolbarComponent implements OnInit {
   ngOnInit() {
   }
 
-  toggleSideBar(shouldOpen: boolean) {
-    console.log('000');
-    this.sideBarIsOpened = !this.sideBarIsOpened;
-  }
-
 }

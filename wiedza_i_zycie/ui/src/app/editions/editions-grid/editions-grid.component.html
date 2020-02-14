@@ -4,7 +4,7 @@
 	<app-editions-card
     *ngFor="let edition of editions"
     [edition]="edition"
-    (selected)="editionSelected.emit(edition.date)"
+    (selected)="editionSelected.emit(edition)"
   ></app-editions-card>
 
 </div>
