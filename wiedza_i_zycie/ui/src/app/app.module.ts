@@ -11,8 +11,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { SharedDependenciesModule} from './shared-dependencies/shared-dependencies.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component'
 import { EditionsModule } from './editions/editions.module';
+import { ArticlesModule } from './articles/articles.module';
 import { SharedModule } from './shared/shared.module'
-import { MainViewComponent } from './main-view/main-view.component'
+import { MainViewComponent } from './main-view/main-view.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { MainViewComponent } from './main-view/main-view.component'
     HttpClientModule,
     SharedDependenciesModule,
     EditionsModule,
+    ArticlesModule,
     SharedModule,
     AppRoutes,
   ],

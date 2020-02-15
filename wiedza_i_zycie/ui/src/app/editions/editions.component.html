@@ -4,14 +4,50 @@
     #sidenav
     mode="over"
   >
-    Tutaj Pan Piotrek może umieścić linki
+  <button
+    mat-icon-button
+    (click)="sidenav.toggle()"
+  >
+  <mat-icon>arrow_forward</mat-icon>
+  </button>
+
+   
+    <div class="links">
+      <a
+      href="/editions"
+      [routerLink]="['/editions']"
+      >
+      Editions    
+      </a>
+      <a
+      href="/articles"
+      [routerLink]="['/articles']"
+      >
+      Articles    
+      </a>
+      <a
+      href="/graf_wiedzy"
+      [routerLink]="['/graf_wiedzy']"
+      >
+      Graf_wiedzy    
+      </a>
+    </div>
+
   </mat-sidenav>
   <mat-sidenav
     #editions
     mode="over"
     position="end"
   >
-    Tutaj pokażemy artykuły dla {{ selectedEditionDate }}
+    <button
+    mat-icon-button
+    (click)="editions.toggle()"
+    >
+    <mat-icon>arrow_backward</mat-icon>
+    </button>
+    <div class="articles" *ngFor="let article of articles">
+      <img src="/assets/images/{{article['image']}}">
+    </div>
   </mat-sidenav>
 
   <mat-sidenav-content>

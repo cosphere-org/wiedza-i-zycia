@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 
+
 @Component({
   selector: 'app-editions',
   templateUrl: './editions.component.html',
@@ -10,10 +11,12 @@ export class EditionsComponent {
 
   @ViewChild('editions', { static: true }) editions: MatSidenav;
 
-  selectedEditionDate: string;
+  selectedEdition: string;
+  articles: [];
 
-  onEditionSelected(selectedEditionDate) {
-    this.selectedEditionDate = selectedEditionDate;
+  onEditionSelected(selectedEdition) {
+    this.articles = selectedEdition['articles'];
+    // console.log(this.articles[0]['image']);
     this.editions.open();
   }
 }

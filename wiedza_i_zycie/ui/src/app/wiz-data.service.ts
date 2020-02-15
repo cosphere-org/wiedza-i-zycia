@@ -12,7 +12,7 @@ export class WizDataService {
   constructor(
     private http: HttpClient) {
       this.getWizJson().subscribe(data => {
-        // console.log(data);
+        console.log(data);
     });
 }
 
@@ -30,7 +30,8 @@ public getData(){
 
 public getEdition(number){
   this.getWizJson().subscribe(data => {
-    return data[number];
+    console.log(data[number])
+    // return data[number];
   });
 }
 

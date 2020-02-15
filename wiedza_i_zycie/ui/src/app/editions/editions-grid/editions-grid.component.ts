@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { WizDataService } from '../wiz-data.service';
+import { WizDataService } from 'src/app/wiz-data.service';
 
 @Component({
   selector: 'app-editions-grid',
@@ -20,10 +20,6 @@ export class EditionsGridComponent implements OnInit {
     this.wizDataService.getWizJson().subscribe(editions => {
       this.editions = editions;
     });
-  }
-
-  getPath(){
-
   }
 
 }
