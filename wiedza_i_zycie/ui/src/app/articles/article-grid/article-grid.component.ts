@@ -5,11 +5,8 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './article-grid.component.html',
   styleUrls: ['./article-grid.component.scss']
 })
-export class ArticleGridComponent implements OnInit {
+export class ArticleGridComponent {
 
   constructor() { }
-
-  ngOnInit() {
-  }
 
 }
