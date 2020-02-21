@@ -11,25 +11,25 @@
   <mat-icon>arrow_forward</mat-icon>
   </button>
 
-   
+
     <div class="links">
       <a
       href="/editions"
       [routerLink]="['/editions']"
       >
-      Editions    
+      Editions
       </a>
       <a
       href="/articles"
       [routerLink]="['/articles']"
       >
-      Articles    
+      Articles
       </a>
       <a
       href="/graf_wiedzy"
       [routerLink]="['/graf_wiedzy']"
       >
-      Graf_wiedzy    
+      Graf_wiedzy
       </a>
     </div>
 
@@ -57,7 +57,9 @@
       alternatively one could just create an OUTPUT in the `main-toolbar` and
       `emit` event every time one would like to see the menu!
     -->
-    <app-main-toolbar>
+    <app-main-toolbar
+      (search)="store.bulkReadEditions($event)"
+    >
       <button
         mat-icon-button
         (click)="sidenav.toggle()"

@@ -1,29 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 
-import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { increment } from '../../main-wiz.actions';
 
 @Component({
   selector: 'app-main-toolbar',
   templateUrl: './main-toolbar.component.html',
   styleUrls: ['./main-toolbar.component.scss']
 })
-export class MainToolbarComponent implements OnInit {
+export class MainToolbarComponent {
 
-  sideBarIsOpened = false;
+  @Output() search: EventEmitter<string> = new EventEmitter<string>();
 
-  count$: Observable<number>;
+  query: string;
 
-  constructor(private store: Store<{ count: number }>) {
-    this.count$ = store.pipe(select('count'));
-  }
-
-  ngOnInit() {
-  }
- 
-  increment() {
-    this.store.dispatch(increment());
-  }
+  constructor() {}
 
 }

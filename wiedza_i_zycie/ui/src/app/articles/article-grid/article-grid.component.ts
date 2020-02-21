@@ -10,17 +10,17 @@ export class ArticleGridComponent {
 
   @Output() articleSelected: EventEmitter<string> = new EventEmitter<string>();
 
-  articles;
+  // articles;
 
   constructor(
     private wizDataService: WizDataService
   ) { }
 
   ngOnInit() {
-    this.wizDataService.getWizJson().subscribe(editions => {
-      
-      this.articles = articles;
-    });
+    // this.wizDataService.getWizJson().subscribe(editions => {
+
+    //   this.articles = articles;
+    // });
   }
 
 }

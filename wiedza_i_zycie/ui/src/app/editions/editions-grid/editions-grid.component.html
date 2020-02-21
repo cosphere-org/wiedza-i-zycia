@@ -1,10 +1,10 @@
 <div
+  *ngIf="store.state$ | async as state"
   class="grid-container">
 
 	<app-editions-card
-    *ngFor="let edition of editions"
+    *ngFor="let edition of state.filteredEditions"
     [edition]="edition"
-    (selected)="editionSelected.emit(edition)"
   ></app-editions-card>
 
 </div>
