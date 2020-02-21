@@ -15,6 +15,17 @@ import { ArticlesModule } from './articles/articles.module';
 import { SharedModule } from './shared/shared.module'
 import { MainViewComponent } from './main-view/main-view.component';
 
+import { StoreModule } from '@ngrx/store';
+import { 
+  counterReducer,
+  searchReducer,
+} from './main-wiz.reducer';
+
+let reducers = {
+  count: counterReducer,
+  searched: searchReducer,
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,6 +44,7 @@ import { MainViewComponent } from './main-view/main-view.component';
     ArticlesModule,
     SharedModule,
     AppRoutes,
+    StoreModule.forRoot(reducers)
   ],
   providers: [],
   bootstrap: [AppComponent]

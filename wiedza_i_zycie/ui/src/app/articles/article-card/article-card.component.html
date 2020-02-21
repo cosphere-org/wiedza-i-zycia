@@ -1,1 +1,13 @@
-<p>article-card works!</p>
+<mat-card class="example-card">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>{{ article.date }}</mat-card-title>
+    </mat-card-header>
+      <mat-card-content>
+        <img mat-card-image [src]="'/assets/images/' + article.image">
+      </mat-card-content>
+  
+      <mat-card-actions>
+        <button mat-button (click)="selected.emit(article)">SELECT</button>
+      </mat-card-actions>
+  </mat-card>

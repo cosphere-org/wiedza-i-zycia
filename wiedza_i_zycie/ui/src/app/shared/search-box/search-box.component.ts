@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 
+import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { edit_search_field } from 'src/app/main-wiz.actions';
 
 @Component({
   selector: 'app-search-box',
@@ -8,6 +11,18 @@ import { Component } from '@angular/core';
 })
 export class SearchBoxComponent  {
 
-  constructor() { }
+  constructor(private store: Store<{ shField: string }>) {
+    this.shField$ = store.pipe(select('shField'));
+  }
+
+  editField() {
+    // console.log(this.shField$);
+    console.log(this)
+    // this.form.value
+    this.store.dispatch(edit_search_field());
+  }
+
+  shField$: Observable<string>;
+
 
 }

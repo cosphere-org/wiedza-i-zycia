@@ -1,1 +1,10 @@
-<p>article-grid works!</p>
+<div
+  class="grid-container">
+
+	<app-article-card
+    *ngFor="let article of articles"
+    [article]="article"
+    (selected)="articleSelected.emit(article)"
+  ></app-article-card>
+
+</div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, Input, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-article-card',
@@ -7,6 +7,8 @@ import { Component } from '@angular/core';
 })
 export class ArticleCardComponent{
 
-  constructor() { }
+  @Input() article;
+
+  @Output() selected: EventEmitter<string> = new EventEmitter<string>();
 
 }

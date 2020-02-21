@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { WizDataService } from 'src/app/wiz-data.service';
 
 @Component({
   selector: 'app-article-grid',
@@ -7,6 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ArticleGridComponent {
 
-  constructor() { }
+  @Output() articleSelected: EventEmitter<string> = new EventEmitter<string>();
+
+  articles;
+
+  constructor(
+    private wizDataService: WizDataService
+  ) { }
+
+  ngOnInit() {
+    this.wizDataService.getWizJson().subscribe(editions => {
+      
+      this.articles = articles;
+    });
+  }
 
 }
