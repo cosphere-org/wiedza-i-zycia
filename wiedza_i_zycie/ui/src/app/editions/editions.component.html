@@ -57,7 +57,7 @@
       alternatively one could just create an OUTPUT in the `main-toolbar` and
       `emit` event every time one would like to see the menu!
     -->
-    <app-main-toolbar
+    <app-toolbar
       (search)="store.bulkReadEditions($event)"
     >
       <button
@@ -66,7 +66,7 @@
       >
         <mat-icon>menu</mat-icon>
       </button>
-    </app-main-toolbar>
+    </app-toolbar>
 
     <app-editions-grid
       (editionSelected)="onEditionSelected($event)"

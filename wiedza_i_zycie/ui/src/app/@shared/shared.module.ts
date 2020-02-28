@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { SharedDependenciesModule } from '../shared-dependencies/shared-dependencies.module';
-import { MainToolbarComponent } from './main-toolbar/main-toolbar.component'
+import { ToolbarComponent } from './toolbar/toolbar.component'
 
 
 @NgModule({
@@ -13,10 +13,10 @@ import { MainToolbarComponent } from './main-toolbar/main-toolbar.component'
     SharedDependenciesModule,
   ],
   declarations: [
-    MainToolbarComponent,
+    ToolbarComponent,
   ],
   exports: [
-    MainToolbarComponent,
+    ToolbarComponent,
   ]
 })
 export class SharedModule { }

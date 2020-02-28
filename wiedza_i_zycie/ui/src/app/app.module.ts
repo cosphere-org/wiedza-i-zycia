@@ -11,9 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SharedDependenciesModule} from './shared-dependencies/shared-dependencies.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component'
 import { EditionsModule } from './editions/editions.module';
-import { ArticlesModule } from './articles/articles.module';
-import { SharedModule } from './shared/shared.module'
-import { MainViewComponent } from './main-view/main-view.component';
+import { SharedModule } from './@shared/shared.module'
 
 import { AppStoreModule } from '@store';
 
@@ -21,7 +19,6 @@ import { AppStoreModule } from '@store';
   declarations: [
     AppComponent,
     PageNotFoundComponent,
-    MainViewComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,7 +29,6 @@ import { AppStoreModule } from '@store';
     HttpClientModule,
     SharedDependenciesModule,
     EditionsModule,
-    ArticlesModule,
     SharedModule,
     AppRoutes,
     AppStoreModule,

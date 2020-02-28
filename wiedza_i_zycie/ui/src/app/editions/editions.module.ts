@@ -7,7 +7,7 @@ import { EditionDetalisComponent } from './edition-detalis/edition-detalis.compo
 import { EditionsGridComponent } from './editions-grid/editions-grid.component'
 import { EditionsComponent } from './editions.component'
 import { WizDataService } from 'src/app/wiz-data.service';
-import { SharedModule } from 'src/app/shared/shared.module'
+import { SharedModule } from 'src/app/@shared/shared.module'
 import { RouterModule } from '@angular/router'
 
 @NgModule({
