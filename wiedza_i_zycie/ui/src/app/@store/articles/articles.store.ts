@@ -5,6 +5,7 @@ import { AppState } from '../app-state';
 import { ArticlesActions } from './articles.actions';
 import { ArticlesSelectors } from './articles.selectors';
 import { ArticlesState } from './articles.state';
+import { Article } from './articles.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class ArticlesStore {
 
   state$ = this.store$.pipe(select(ArticlesSelectors.getEditions()));
 
-  bulkReadEditions(articles?: []): void {
+  bulkReadArticles(articles: Article[]): void {
     this.store$.dispatch(new ArticlesActions.BulkReadArticles({ articles }));
   }
 

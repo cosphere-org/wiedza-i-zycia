@@ -8,6 +8,8 @@ import { EditionsStore } from '@store';
 })
 export class EditionsGridComponent {
 
+  @Output() editionSelected: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   constructor(public store: EditionsStore) {}
 
 }

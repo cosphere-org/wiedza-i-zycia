@@ -12,43 +12,41 @@ const initState: EditionsState = {
 
 export function editionsReducer(state: EditionsState = initState, action: EditionsActions.Actions) {
 
+  let query;
+  let filteredEditions;
+
   switch (action.type) {
 
-    case EditionsActions.Type.BULK_READ_EDITIONS:
-
-      if (action.payload.query) {
-        return {
-          ...state,
-          filteredEditions: [
-            {
-              articles: [],
-              table_of_contents: [],
-              date: '08/2011',
-              image: 'b178bc2b0799bfd8194d6ad90f5a912d.jpg',
-              url: 'https://www.wiz.pl/10,82.html'
-            },
-          ]
-        };
-      }
+    case EditionsActions.Type.BULK_READ_EDITIONS_SUCCESS:
 
       return {
         ...state,
-        filteredEditions: [
-          {
-            articles: [],
-            table_of_contents: [],
-            date: '08/2011',
-            image: 'b178bc2b0799bfd8194d6ad90f5a912d.jpg',
-            url: 'https://www.wiz.pl/10,82.html'
-          },
-          {
-            articles: [],
-            table_of_contents: [],
-            date: '01/2018',
-            image: '408379496eeb6132bb6ffc6e9dfa9395.jpg',
-            url: 'https://www.wiz.pl/10,254.html'
-          },
-        ]
+        allEditions: action.payload.editions,
+        filteredEditions: action.payload.editions.slice(0, 30)
+      };
+
+    case EditionsActions.Type.FILTER_EDITIONS:
+
+      if (state.allEditions.length === 0) {
+        return state;
+      }
+
+      filteredEditions = state.allEditions.filter(edition => {
+
+        const articles = edition.articles.map(a => {
+          const paragraphs = a.paragraphs.join('\n');
+
+          return `${a.title} \n ${paragraphs}`;
+        });
+
+        const editionText = articles.join('\n');
+
+        return new RegExp(action.payload.query, 'gim').test(editionText);
+      });
+
+      return {
+        ...state,
+        filteredEditions: filteredEditions.slice(0, 30)
       };
 
     default:

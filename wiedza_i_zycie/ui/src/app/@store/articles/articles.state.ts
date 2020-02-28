@@ -7,5 +7,5 @@ export interface ArticlesState {
 
   filteredArticles: Article[];
 
-  selectedArticles: Article;
+  selectedArticle: Article;
 }

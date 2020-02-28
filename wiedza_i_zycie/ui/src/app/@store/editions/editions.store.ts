@@ -14,8 +14,12 @@ export class EditionsStore {
 
   state$ = this.store$.pipe(select(EditionsSelectors.getEditions()));
 
-  bulkReadEditions(query?: string): void {
-    this.store$.dispatch(new EditionsActions.BulkReadEditions({ query }));
+  bulkReadEditions(): void {
+    this.store$.dispatch(new EditionsActions.BulkReadEditions());
+  }
+
+  filterEditions(query: string): void {
+    this.store$.dispatch(new EditionsActions.FilterEditions({ query }));
   }
 
 }
