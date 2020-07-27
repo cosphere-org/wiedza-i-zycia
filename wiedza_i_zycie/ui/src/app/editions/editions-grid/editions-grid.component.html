@@ -1,4 +1,14 @@
 <div
+  *ngIf="store.state$ | async as state">
+
+  <div
+  *ngIf="state.setProgressBar">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
+</div>
+
+
+<div
   *ngIf="store.state$ | async as state"
   class="grid-container">
 

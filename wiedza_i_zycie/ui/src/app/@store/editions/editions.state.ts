@@ -8,4 +8,6 @@ export interface EditionsState {
   filteredEditions: Edition[];
 
   selectedEdition: Edition;
+
+  setProgressBar: boolean;
 }

@@ -22,4 +22,12 @@ export class EditionsStore {
     this.store$.dispatch(new EditionsActions.FilterEditions({ query }));
   }
 
+  runProgressBar(): void {
+    this.store$.dispatch(new EditionsActions.RunProgressBar());
+  }
+
+  stopProgressBar(): void {
+    this.store$.dispatch(new EditionsActions.StopProgressBar());
+  }
+
 }

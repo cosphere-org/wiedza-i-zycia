@@ -7,6 +7,7 @@ const initState: EditionsState = {
   allEditions: [],
   filteredEditions: [],
   selectedEdition: null,
+  setProgressBar: false,
 
 };
 
@@ -48,6 +49,20 @@ export function editionsReducer(state: EditionsState = initState, action: Editio
         ...state,
         filteredEditions: filteredEditions.slice(0, 30)
       };
+
+    case EditionsActions.Type.RUN_PROGRESS_BAR:
+
+      return {
+        ...state,
+        setProgressBar: true
+      }
+
+    case EditionsActions.Type.STOP_PROGRESS_BAR:
+
+      return {
+        ...state,
+        setProgressBar: false
+      }
 
     default:
       return { ...state };
