@@ -5,6 +5,7 @@ import { AppState } from '../app-state';
 import { EditionsActions } from './editions.actions';
 import { EditionsSelectors } from './editions.selectors';
 import { EditionsState } from './editions.state';
+import { promise } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,12 @@ export class EditionsStore {
 
   filterEditions(query: string): void {
     this.store$.dispatch(new EditionsActions.FilterEditions({ query }));
+  }
+
+  subsetEditions(start: number, end: number): void {
+    this.store$.dispatch(new EditionsActions.SubsetEditions({ start, end }));
+    console.log(start);
+    console.log(end);
   }
 
 }
