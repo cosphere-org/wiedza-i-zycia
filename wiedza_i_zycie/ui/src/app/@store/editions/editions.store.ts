@@ -5,7 +5,7 @@ import { AppState } from '../app-state';
 import { EditionsActions } from './editions.actions';
 import { EditionsSelectors } from './editions.selectors';
 import { EditionsState } from './editions.state';
-import { promise } from 'protractor';
+
 
 @Injectable({
   providedIn: 'root'
