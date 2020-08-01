@@ -28,4 +28,5 @@ export class EditionsComponent implements OnInit {
     this.articles.open();
   }
 
+
 }

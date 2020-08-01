@@ -2,8 +2,14 @@
   *ngIf="store.state$ | async as state"
   class="grid-container">
 
+    <mat-paginator [length]="state.allEditions.length"
+    [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    (page)= "onPageChange($event)" >
+    </mat-paginator>
+
   	<app-editions-card
-      *ngFor="let edition of state.filteredEditions"
+      *ngFor="let edition of (state.filteredEditions)"
       [edition]="edition"
       (editionSelected)="editionSelected.emit(true)"
     ></app-editions-card>
