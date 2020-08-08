@@ -8,7 +8,9 @@ export namespace EditionsActions {
     BULK_READ_EDITIONS_SUCCESS = '[EDITIONS] Bulk Read Editions Success',
     BULK_READ_EDITIONS_ERROR = '[EDITIONS] Bulk Read Editions Error',
     FILTER_EDITIONS = '[EDITIONS] Filter Editions',
-    SUBSET_EDITIONS = '[EDITIONS] Chose Editions Based On Borders'
+    RUN_PROGRESS_BAR = '[EDITIONS_GRID] Run Progress Bar, while bulk read',
+    STOP_PROGRESS_BAR = '[EDITIONS_GRID] Stops Progress Bar, after bulk read',
+    SUBSET_EDITIONS = '[EDITIONS] Chose Editions Based On Borders',
   }
 
   export class BulkReadEditions implements Action {
@@ -35,6 +37,18 @@ export namespace EditionsActions {
     constructor(public payload: { query: string }) {}
   }
 
+  export class RunProgressBar implements Action {
+    readonly type = Type.RUN_PROGRESS_BAR;
+
+    constructor() {}
+  }
+
+  export class StopProgressBar implements Action {
+    readonly type = Type.STOP_PROGRESS_BAR;
+
+    constructor() {}  
+  }
+
   export class SubsetEditions implements Action {
     readonly type = Type.SUBSET_EDITIONS;
 
@@ -46,5 +60,7 @@ export namespace EditionsActions {
     | BulkReadEditionsSuccess
     | BulkReadEditionsError
     | FilterEditions
-    | SubsetEditions
+    | RunProgressBar
+    | StopProgressBar
+    | SubsetEditions;
 }

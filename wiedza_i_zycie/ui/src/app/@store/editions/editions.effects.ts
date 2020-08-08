@@ -8,8 +8,6 @@ import { catchError, map, mergeMap, switchMap, filter, tap, withLatestFrom } fro
 import { AppState } from '../app-state';
 import { EditionsActions } from './editions.actions';
 import { Edition } from './editions.model';
-
-// to pewnie trzeba zrobic jakos inaczej
 import { EditionsStore } from '@store';
 
 @Injectable()
@@ -20,7 +18,7 @@ export class EditionsEffects {
     switchMap(action => {
       return this.http.get('/assets/editions.json').pipe(
         tap(editions => {
-          // np. tutaj byśmy mogli uruchomic progress bar!
+          this.editionsStore.runProgressBar();
           console.log('pokaż progress bar');
         }),
         map((editions: Edition[]) => new EditionsActions.BulkReadEditionsSuccess({ editions })),
@@ -31,10 +29,15 @@ export class EditionsEffects {
     })
   );
 
-    // (create effect) bo nie wiedziałem jak w składni z dekoratorem @Effect() dać
-    // (dispatch: false), a jako ze to side effect to sie nieskonczona petla tworzyla
-    // w ogole pewnie to nie powino byc odpalane tutaj, ale nie wiem jak zrobic
-    // w inny sposob zeby to bylo odpalone 1 raz po bullReadEditions
+  // syntax to change
+  onBulkReadEditionsSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<EditionsActions.BulkReadEditionsSuccess>(EditionsActions.Type.BULK_READ_EDITIONS_SUCCESS),
+      tap(action => {
+        this.editionsStore.stopProgressBar();
+      })
+    ), { dispatch: false });
+ 
     bulkReadSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType<EditionsActions.BulkReadEditionsSuccess>(EditionsActions.Type.BULK_READ_EDITIONS_SUCCESS),
@@ -48,6 +51,7 @@ export class EditionsEffects {
     private actions$: Actions,
     private store$: Store<AppState>,
     private http: HttpClient,
+    private editionsStore: EditionsStore,
     private store: EditionsStore
   ) {}
 }

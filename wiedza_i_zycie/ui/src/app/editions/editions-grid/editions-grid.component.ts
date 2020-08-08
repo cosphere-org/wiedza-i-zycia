@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { EditionsStore } from '@store';
+import { MatProgressBar } from '@angular/material/progress-bar'
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 
 @Component({

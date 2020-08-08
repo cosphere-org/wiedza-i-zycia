@@ -22,6 +22,14 @@ export class EditionsStore {
     this.store$.dispatch(new EditionsActions.FilterEditions({ query }));
   }
 
+  runProgressBar(): void {
+    this.store$.dispatch(new EditionsActions.RunProgressBar());
+  }
+
+  stopProgressBar(): void {
+    this.store$.dispatch(new EditionsActions.StopProgressBar());
+  }
+
   subsetEditions(start: number, end: number): void {
     this.store$.dispatch(new EditionsActions.SubsetEditions({ start, end }));
   }
