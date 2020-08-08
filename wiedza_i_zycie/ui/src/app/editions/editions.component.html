@@ -11,43 +11,57 @@
   <mat-icon>arrow_forward</mat-icon>
   </button>
 
-   
     <div class="links">
       <a
       href="/editions"
       [routerLink]="['/editions']"
       >
-      Editions    
+      Editions
       </a>
       <a
       href="/articles"
       [routerLink]="['/articles']"
       >
-      Articles    
+      Articles
       </a>
       <a
       href="/graf_wiedzy"
       [routerLink]="['/graf_wiedzy']"
       >
-      Graf_wiedzy    
+      Graf_wiedzy
       </a>
     </div>
 
   </mat-sidenav>
+  
   <mat-sidenav
-    #editions
+    #articles
     mode="over"
     position="end"
   >
     <button
     mat-icon-button
-    (click)="editions.toggle()"
+    (click)="articles.toggle()"
     >
     <mat-icon>arrow_backward</mat-icon>
     </button>
-    <div class="articles" *ngFor="let article of articles">
-      <img src="/assets/images/{{article['image']}}">
-    </div>
+
+    <ng-container
+      *ngIf="articlesStore.state$ | async as state"
+    >
+      <div
+        *ngFor="let article of state.allArticles"
+        class="articles"
+      >
+        <img src="/assets/images/{{ article['image'] }}">
+        <p
+          *ngFor="let paragraph of article.paragraphs"
+        >
+          {{ paragraph }}
+        </p>
+      </div>
+    </ng-container>
+
   </mat-sidenav>
 
   <mat-sidenav-content>
@@ -57,17 +71,19 @@
       alternatively one could just create an OUTPUT in the `main-toolbar` and
       `emit` event every time one would like to see the menu!
     -->
-    <app-main-toolbar>
+    <app-toolbar
+      (search)="store.filterEditions($event)"
+    >
       <button
         mat-icon-button
         (click)="sidenav.toggle()"
       >
         <mat-icon>menu</mat-icon>
       </button>
-    </app-main-toolbar>
+    </app-toolbar>
 
     <app-editions-grid
-      (editionSelected)="onEditionSelected($event)"
+      (editionSelected)="onEditionSelected()"
     ></app-editions-grid>
 
   </mat-sidenav-content>

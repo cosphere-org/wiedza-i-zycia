@@ -1,5 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+
+import { EditionsStore, ArticlesStore } from '@store';
 
 
 @Component({
@@ -7,16 +9,24 @@ import { MatSidenav } from '@angular/material/sidenav';
   templateUrl: './editions.component.html',
   styleUrls: ['./editions.component.scss']
 })
-export class EditionsComponent {
+export class EditionsComponent implements OnInit {
 
-  @ViewChild('editions', { static: true }) editions: MatSidenav;
+  @ViewChild('articles', { static: true }) articles: MatSidenav;
 
   selectedEdition: string;
-  articles: [];
 
-  onEditionSelected(selectedEdition) {
-    this.articles = selectedEdition['articles'];
-    // console.log(this.articles[0]['image']);
-    this.editions.open();
+  constructor(
+    public store: EditionsStore,
+    public articlesStore: ArticlesStore,
+  ) {}
+
+  ngOnInit() {
+    this.store.bulkReadEditions();
   }
+
+  onEditionSelected() {
+    this.articles.open();
+  }
+
+
 }

@@ -1,10 +1,27 @@
 <div
+  *ngIf="store.state$ | async as state">
+
+  <div
+  *ngIf="state.setProgressBar">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
+</div>
+
+
+<div
+  *ngIf="store.state$ | async as state"
   class="grid-container">
 
-	<app-editions-card
-    *ngFor="let edition of editions"
-    [edition]="edition"
-    (selected)="editionSelected.emit(edition)"
-  ></app-editions-card>
+    <mat-paginator [length]="state.allEditions.length"
+    [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    (page)= "onPageChange($event)" >
+    </mat-paginator>
+
+  	<app-editions-card
+      *ngFor="let edition of (state.filteredEditions)"
+      [edition]="edition"
+      (editionSelected)="editionSelected.emit(true)"
+    ></app-editions-card>
 
 </div>

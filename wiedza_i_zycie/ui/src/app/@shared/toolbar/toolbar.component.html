@@ -1,0 +1,18 @@
+<mat-toolbar>
+  <ng-content></ng-content>
+
+  <div class="search-container">
+    <form>
+      <input
+        type="text"
+        placeholder="Search.."
+        name="search"
+        [(ngModel)]="query"
+      >
+      <button
+        type="button"
+        (click)="search.emit(query)">SEARCH</button>
+    </form>
+  </div>
+
+</mat-toolbar>
