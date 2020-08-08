@@ -8,8 +8,7 @@ import { catchError, map, mergeMap, switchMap, filter, tap, withLatestFrom } fro
 import { AppState } from '../app-state';
 import { EditionsActions } from './editions.actions';
 import { Edition } from './editions.model';
-
-import { EditionsStore } from './editions.store';
+import { EditionsStore } from '@store';
 
 @Injectable()
 export class EditionsEffects {
@@ -30,15 +29,7 @@ export class EditionsEffects {
     })
   );
 
-  // @Effect()
-  // onBulkReadEditionsSuccess$: Observable<Action> = this.actions$.pipe(
-  //   ofType<EditionsActions.BulkReadEditions>(EditionsActions.Type.BULK_READ_EDITIONS_SUCCESS),
-  //       tap(editions => {
-  //         this.editionsStore.stopProgressBar();
-  //       }),
-  // );
-
-  // taki sam problem jak przy poprzednim commicie
+  // syntax to change
   onBulkReadEditionsSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType<EditionsActions.BulkReadEditionsSuccess>(EditionsActions.Type.BULK_READ_EDITIONS_SUCCESS),
@@ -46,11 +37,21 @@ export class EditionsEffects {
         this.editionsStore.stopProgressBar();
       })
     ), { dispatch: false });
+ 
+    bulkReadSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<EditionsActions.BulkReadEditionsSuccess>(EditionsActions.Type.BULK_READ_EDITIONS_SUCCESS),
+      tap(action => {
+        this.store.subsetEditions(0, 10);
+      })
+    ), { dispatch: false });
+    
 
   constructor(
     private actions$: Actions,
     private store$: Store<AppState>,
     private http: HttpClient,
     private editionsStore: EditionsStore,
+    private store: EditionsStore
   ) {}
 }

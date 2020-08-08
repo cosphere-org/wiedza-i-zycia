@@ -63,6 +63,13 @@ export function editionsReducer(state: EditionsState = initState, action: Editio
         ...state,
         setProgressBar: false
       }
+      
+    case EditionsActions.Type.SUBSET_EDITIONS:
+
+      return {
+        ...state,
+        filteredEditions: state.allEditions.slice(action.payload.start, action.payload.end)
+      }
 
     default:
       return { ...state };

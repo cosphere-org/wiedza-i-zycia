@@ -10,6 +10,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import {MatPaginatorModule} from '@angular/material/paginator'; 
+
 
 @NgModule({
   imports: [
@@ -23,6 +25,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatSidenavModule,
     MatToolbarModule,
     MatProgressBarModule,
+    MatPaginatorModule
   ],
   declarations: [],
   exports: [
@@ -35,6 +38,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatSidenavModule,
     MatToolbarModule,
     MatProgressBarModule,
+    MatPaginatorModule
   ]
 })
 export class SharedDependenciesModule { }
