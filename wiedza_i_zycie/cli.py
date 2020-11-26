@@ -8,6 +8,7 @@ from .scraper import WiedzaIZycieScraper
 from .ldaModels import LdaModels
 from .prepareAndTokenize import PrepareAndTokenize
 from .fileOperations import FileOperations
+from .visualise import Visualise
 
 
 def get_scraper():
@@ -29,6 +30,26 @@ def get_models():
     return LdaModels(
         mallet_path=os.environ['MALLET_PATH'],
     )
+
+
+def get_visualize(
+        dictionary,
+        corpus,
+        lda,
+        wiz_df,
+        histogram_path,
+        pydavis_path,
+    ):
+
+    return Visualise(
+        dictionary,
+        corpus,
+        lda,
+        wiz_df,
+        histogram_path,
+        pydavis_path,
+    )
+
 
 # def get_fileOperations():
 
@@ -93,12 +114,24 @@ def plot_histogram_of_lengths():
 
 @click.command()
 def reset_model():
-    get_textAnalyzer().reset_model()
+    files = [
+        os.environ['CORPUS_PATH'],
+        os.environ['DICTIONARY_PATH'],
+        os.environ['LDA_PATH'],
+        os.environ['TRAINED_DF_PATH'],
+    ]
+    FileOperations(
+        files,
+        None,
+    ).remove_files(files)
 
 
 @click.command()
 def reset_df():
-    get_textAnalyzer().reset_df()
+    FileOperations(
+        [os.environ['TOKENIZED_PATH']],
+        None,
+    ).remove_files([os.environ['TOKENIZED_PATH']])
 
 
 @click.command()
@@ -113,13 +146,16 @@ def run_coh():
 
 @click.command()
 def run_analisys():
+    
+    os.nice(19)
+
     [w_df, ] = FileOperations(
         path_list=[os.environ['TOKENIZED_PATH']],
         file_list=None,
     ).extract_resources(
         get_prepare_and_tokenize().prepare_and_tokenize
     )()
-    
+
     [t_df, ] = FileOperations(
         path_list=[os.environ['TRAINED_DF_PATH']],
         file_list=None,
@@ -152,6 +188,17 @@ def run_analisys():
     ).extract_resources(
         get_models().choes_best_model
     )(models=mods)
+
+    import ipdb; ipdb.set_trace()
+
+    get_visualize(
+        dic,
+        cor,
+        mods[0],
+        t_df,
+        os.environ['histogram_path'],
+        os.environ['PYDAVIS_VIS_FILE'],
+    ).choes_best_model()
 
 
 cli.add_command(scrape_all_and_save)

@@ -84,7 +84,8 @@ class PrepareAndTokenize:
         df = wiz_df[wiz_df['tokenized_articles'].map(len) >= 40]
         df = wiz_df[wiz_df['tokenized_articles'].map(type) == list]
         df.reset_index(drop=True, inplace=True)
-        wiz_df['tokenized_articles'] = [[t for t in a if t is not None] for a in articles]
+        df['tokenized_articles'] = [[t for t in a if t is not None] for a in wiz_df['tokenized_articles']]
+
         return df
 
     def prepare_and_tokenize(self, **kwargs):

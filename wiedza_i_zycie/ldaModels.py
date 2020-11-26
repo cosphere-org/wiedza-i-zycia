@@ -2,10 +2,9 @@
 import gensim
 import numpy as np
 from gensim.models import CoherenceModel, LdaModel
-from scipy.spatial import distance
+# from scipy.spatial import distance
 
-from .prepareAndTokenize import PrepareAndTokenize
-
+from time import sleep
 
 class LdaModels:
 
@@ -31,6 +30,7 @@ class LdaModels:
             num_topics=num_topics,
             id2word=dictionary,
         )
+
         ## todo default-jdk
         model = gensim.models.wrappers.ldamallet.malletmodel2ldamodel(ldamallet)
 
@@ -54,7 +54,7 @@ class LdaModels:
                 'step': 50,
             },
             'minimum_probability': {
-                'start': 0.0,
+                'start': 0.1,
                 'limit': 0.5,
                 'step': 0.1,
             },
@@ -69,32 +69,55 @@ class LdaModels:
             'chunksize': 300,
             'minimum_probability': 0.0,
         }
-        
+
         models = []
 
-        for param in params:
-            for param in params.values():
-                for value in range(
-                    param['start'], param['limit'], param['step']):
+        for param_key, par_val in zip(params.keys(), params.values()):
+            for val in np.arange(
+                    par_val['start'],
+                    par_val['limit'],
+                    par_val['step'],
+            ):
+                model_params[param_key] = val
+                models.append(self.model_create(
+                    model_params, articles, dictionary))
+                sleep(0.05)
+                for param_key2, par_val2 in zip(
+                        params.keys(), params.values()):
+                    for val2 in np.arange(
+                        par_val2['start'],
+                        par_val2['limit'],
+                        par_val2['step'],
+                    ):
+                        sleep(0.05)
+                        model_params[param_key2] = val2
+                        models.append(self.model_create(model_params, articles, dictionary))
 
-                    model_params[param] = value
-                    model = LdaModel(**model_params)
-
-                    coherencemodel = CoherenceModel(
-                        model=model,
-                        texts=texts,
-                        dictionary=dictionary,
-                        coherence='c_v'
-                    )
-                    models.append(
-                        {
-                            'coherence': coherencemodel.get_coherence(),
-                            'model': model,
-                            'params': model_params,
-                        }
-                    )
         return models
+
+    def model_create(self, model_params, articles, dictionary):
+
+        mod = []
+
+        print(model_params['num_topics'])
+        print(model_params['chunksize'])
+        print(model_params['minimum_probability'])
+        model = LdaModel(**model_params)
+
+        coherencemodel = CoherenceModel(
+            model=model,
+            texts=articles,
+            dictionary=dictionary,
+            coherence='c_v'
+        )
+        mod = {
+            'coherence': coherencemodel.get_coherence(),
+            'model': model,
+            'params': model_params,
+        }
+
+        return mod
 
     def choes_best_model(self, **kwargs):
         models = kwargs['models']
-        return sorted(models, key=lambda k: k['coherence'])[0]
+        return sorted(models, key=lambda k: k['coherence'])

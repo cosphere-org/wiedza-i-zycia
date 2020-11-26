@@ -85,3 +85,4 @@ class Visualise:
     def choes_best_model(self, models):
         print(sorted(models, key=lambda k: k['coherence']))
 
+

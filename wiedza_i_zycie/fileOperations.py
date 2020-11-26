@@ -63,16 +63,3 @@ class FileOperations:
             if os.path.isfile(file):
                 os.remove(file)
 
-
-    # def reset_model(self):
-
-    #     files = [
-    #         self.corpus_path,
-    #         self.dictionary_path,
-    #         self.lda_path,
-    #         self.trained_df_path
-    #     ]
-    #     self.remove_files(files)
-
-    # def reset_df(self):
-    #     self.remove_files([self.tokenized_text_df_path])
