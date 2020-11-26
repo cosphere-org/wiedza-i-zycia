@@ -7,6 +7,7 @@ ___________________________
 * pip
 * python3
 * virtualenv
+* (for use of mallet install default-jdk)
 ___________________________
 
 ### Installation

@@ -3,11 +3,13 @@ import json
 import os
 
 import click
+import numpy as np
 
-from .scraper import WiedzaIZycieScraper
+from .fileOperations import FileOperations
+from .jensenshannonCompare import JensenshannonCompare
 from .ldaModels import LdaModels
 from .prepareAndTokenize import PrepareAndTokenize
-from .fileOperations import FileOperations
+from .scraper import WiedzaIZycieScraper
 from .visualise import Visualise
 
 
@@ -32,31 +34,15 @@ def get_models():
     )
 
 
-def get_visualize(
-        dictionary,
-        corpus,
-        lda,
-        wiz_df,
-        histogram_path,
-        pydavis_path,
-    ):
+def get_visualize():
+
+    dictionary, corpus, lda, wiz_df = run_analisys()
 
     return Visualise(
-        dictionary,
-        corpus,
-        lda,
-        wiz_df,
-        histogram_path,
-        pydavis_path,
+        dictionary, corpus, lda, wiz_df,
+        os.environ['HISTOGRAM_PATH'],
+        os.environ['PYDAVIS_VIS_FILE'],
     )
-
-
-# def get_fileOperations():
-
-#     return FileOperations(
-#         path_list=
-#         file_list=
-#     )
 
 
 @click.command()
@@ -93,23 +79,18 @@ def cli():
 
 
 @click.command()
-def analyze_all_articles():
-    get_textAnalyzer().analyze_articles()
-
-
-@click.command()
 def make_pyDavis_visualization():
-    get_textAnalyzer().make_pyDavis_visualization()
+    get_visualize().make_pyDavis_visualization()
 
 
 @click.command()
 def print_document_lengths():
-    get_textAnalyzer().print_document_lengths()
+    get_visualize().print_document_lengths()
 
 
 @click.command()
 def plot_histogram_of_lengths():
-    get_textAnalyzer().plot_histogram_of_lengths()
+    get_visualize().plot_histogram_of_lengths()
 
 
 @click.command()
@@ -136,18 +117,21 @@ def reset_df():
 
 @click.command()
 def model_perplexity_and_coherence():
-    get_textAnalyzer().model_perplexity_and_coherence()    
+    get_visualize().model_perplexity_and_coherence()
 
 
 @click.command()
-def run_coh():
-    get_textAnalyzer().run_coh()
+def get_similar_article():
+
+    dictionary, corpus, lda, wiz_df = run_analisys()
+    random_article_index = np.random.randint(len(wiz_df))
+
+    JensenshannonCompare().get_similar(
+        wiz_df, lda, corpus, dictionary, random_article_index)
 
 
 @click.command()
 def run_analisys():
-    
-    os.nice(19)
 
     [w_df, ] = FileOperations(
         path_list=[os.environ['TOKENIZED_PATH']],
@@ -175,42 +159,30 @@ def run_analisys():
         get_prepare_and_tokenize().get_corpus_and_dictionary
     )(wiz_df=t_df)
 
-    mods = FileOperations(
+    [mods, ] = FileOperations(
         path_list=[os.environ['MODEL_LIST_PATH']],
         file_list=None,
     ).extract_resources(
         get_models().combine_models
     )(dictionary=dic, corpus=cor, wiz_df=t_df)
 
-    FileOperations(
+    model = FileOperations(
         path_list=[os.environ['LDA_PATH']],
         file_list=None,
     ).extract_resources(
         get_models().choes_best_model
     )(models=mods)
 
-    import ipdb; ipdb.set_trace()
-
-    get_visualize(
-        dic,
-        cor,
-        mods[0],
-        t_df,
-        os.environ['histogram_path'],
-        os.environ['PYDAVIS_VIS_FILE'],
-    ).choes_best_model()
+    return dic, cor, model, t_df
 
 
 cli.add_command(scrape_all_and_save)
 cli.add_command(scrape_edition)
 cli.add_command(scrape_article)
-cli.add_command(analyze_all_articles)
 cli.add_command(make_pyDavis_visualization)
 cli.add_command(print_document_lengths)
 cli.add_command(plot_histogram_of_lengths)
 cli.add_command(reset_model)
 cli.add_command(reset_df)
 cli.add_command(model_perplexity_and_coherence)
-cli.add_command(run_coh)
 cli.add_command(run_analisys)
-

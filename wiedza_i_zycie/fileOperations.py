@@ -37,17 +37,16 @@ class FileOperations:
 
     def extract_resources(self, func):
 
-        def wrapper(**kwargs): 
+        def wrapper(**kwargs):
             resources_list = self.load_from_files(self.path_list)
 
             empty = False
             for resource in resources_list:
                 if resource is None:
                     empty = True
-            ## todo can not use in list, becouse data frame
             if empty is True:
                 resources_list = func(**kwargs)
-                if(len(self.path_list)==1):
+                if(len(self.path_list) == 1):
                     resources_list = [resources_list]
                 self.save_files(resources_list, self.path_list)
             return resources_list
@@ -62,4 +61,3 @@ class FileOperations:
         for file in path_list:
             if os.path.isfile(file):
                 os.remove(file)
-

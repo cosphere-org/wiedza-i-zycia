@@ -63,7 +63,6 @@ class Visualise:
         fig.tight_layout()
         plt.savefig(self.histogram_path)
 
-
     def model_perplexity_and_coherence(self):
 
         print('\nPerplexity: ', self.lda.log_perplexity(self.corpus))
@@ -73,7 +72,7 @@ class Visualise:
             texts=self.wiz_df['tokenized_articles'],
             dictionary=self.dictionary,
             coherence='c_v'
-            )
+        )
         coherence = coherence_model.get_coherence()
         print('\nCoherence Score: ', coherence)
 
@@ -83,6 +82,8 @@ class Visualise:
         pyLDAvis.save_html(vis, self.pydavis_path)
 
     def choes_best_model(self, models):
-        print(sorted(models, key=lambda k: k['coherence']))
+        sorted_mods = sorted(models, key=lambda k: k['coherence'])
 
-
+        print(sorted_mods[-1]['coherence'])
+        # for mod in models:
+        #     print(mod['coherence'])

@@ -1,13 +1,12 @@
 
 import re
-import pandas as pd
-import numpy as np
 
 import nltk
+import numpy as np
+import pandas as pd
+from gensim import corpora
 from nltk import FreqDist
 from nltk.tokenize import word_tokenize
-from gensim import corpora
-
 from stempel import StempelStemmer
 from stop_words import get_stop_words
 
@@ -19,16 +18,18 @@ class PrepareAndTokenize:
         self.text_df = text_df
         self.stemmer = StempelStemmer.default()
 
+    #
+    # CLEAN_TEXT
+    #
+
     def clean_and_lowercase(self, text):
-        text = re.sub(
-            "((\S+)?(http(s)?)(\S+))|((\S+)"\
-            "?(www)(\S+))|((\S+)?(\@)(\S+)?)", " ", text)
+        ts = '''
+        ((\S+)?(http(s)?)(\S+))|((\S+)?(www)(\S+))|((\S+)?(\@)(\S+)?)
+        '''
+        text = re.sub(ts, " ", text)
         text = re.sub("[^a-zA-Z ]", "", text)
         text = text.lower()
         return text
-
-    def tokenize_text(self, text):
-        return word_tokenize(text)
 
     def remove_stop_words(self, text):
         stop_words = get_stop_words('pl')
@@ -40,9 +41,13 @@ class PrepareAndTokenize:
 
     def prepare_text(self, text):
         text = self.clean_and_lowercase(text)
-        text = self.tokenize_text(text)
+        text = word_tokenize(text)
         text = self.remove_stop_words(text)
         return self.steam_text(text)
+    
+    #
+    # GET_DATAFRAME_WITH_CLEANED_TEXT
+    #
 
     def get_prepared_paragraphs(self):
         articles_texts = []
@@ -59,6 +64,10 @@ class PrepareAndTokenize:
         all_words = [word for item in list(
             df['tokenized_articles']) for word in item]
         return FreqDist(all_words)
+
+    #
+    # GET_DATAFRAME_PREPARED_FOR_LDA_MODEL
+    #
 
     def keep_50_words(self, text, freq_dist):
         num_of_worlds = len(freq_dist)
@@ -84,33 +93,48 @@ class PrepareAndTokenize:
         df = wiz_df[wiz_df['tokenized_articles'].map(len) >= 40]
         df = wiz_df[wiz_df['tokenized_articles'].map(type) == list]
         df.reset_index(drop=True, inplace=True)
-        df['tokenized_articles'] = [[t for t in a if t is not None] for a in wiz_df['tokenized_articles']]
+        df['tokenized_articles'] = [
+            [t for t in a if t is not None] for a in wiz_df[
+                'tokenized_articles']]
 
         return df
 
     def prepare_and_tokenize(self, **kwargs):
 
+        wiz_df = kwargs['wiz_df']
         nltk.download('punkt')
-        kwargs['wiz_df'] = self.get_prepared_paragraphs()
+        wiz_df = self.get_prepared_paragraphs()
         freq_d = self.get_num_of_words(wiz_df)
 
-        kwargs['wiz_df']['tokenized_articles'] = kwargs['wiz_df'][
+        wiz_df['tokenized_articles'] = wiz_df[
             'tokenized_articles'].apply(self.keep_50_words, freq_dist=freq_d)
 
         return self.keep_only_long_articles(wiz_df)
 
+    #
+    # GET_RANDOMIZED_TRAINING_DATAFRAME
+    #
+
     def get_train_df(self, **kwargs):
 
+        wiz_df = kwargs['wiz_df']
+
         train_df = None
-        msk = np.random.rand(len(kwargs['wiz_df'])) < 0.9
+        msk = np.random.rand(len([wiz_df])) < 0.9
         msk[0] = True
-        train_df = kwargs['wiz_df'][msk]
+        train_df = wiz_df[msk]
         train_df.reset_index(drop=True, inplace=True)
         return train_df
 
+    #
+    # GET_MODEL_PARTS
+    #
+
     def get_corpus_and_dictionary(self, **kwargs):
 
-        articles = kwargs['wiz_df']['tokenized_articles']
+        wiz_df = kwargs['wiz_df']
+
+        articles = wiz_df['tokenized_articles']
         dictionary = corpora.Dictionary(articles)
         corpus = [dictionary.doc2bow(doc) for doc in articles]
 
