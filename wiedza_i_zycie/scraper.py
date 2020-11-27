@@ -3,6 +3,7 @@ import json
 import os
 import re
 import time
+import pandas as pd
 
 from bs4 import BeautifulSoup
 import click
@@ -23,11 +24,11 @@ class WiedzaIZycieScraper:
     #
     def scrape_and_save(self):
 
-        click.secho(f'[STARTING SCRAPER]', fg='green')
+        click.secho('[STARTING SCRAPER]', fg='green')
 
         self.save_editions(self.get_editions_data())
 
-        click.secho(f'[SCRAPER DONE]', fg='green')
+        click.secho('[SCRAPER DONE]', fg='green')
 
     def get_editions_data(self):
 
@@ -51,12 +52,23 @@ class WiedzaIZycieScraper:
                     indent=4,
                     sort_keys=True))
 
+    def get_articles_df(self):
+        path = os.path.join(
+            os.path.dirname(__file__), 'data', 'editions.json')
+
+        if(os.path.isfile(path)):
+            with open(path) as json_file:
+                data = json.load(json_file)
+            return pd.DataFrame(data)
+        else:
+            click.secho('[JSON NOT FOUND, RUN SCRAPER]', fg='red')
+
     #
     # EDITION
     #
     def get_edition_data(self, url):
 
-        click.secho(f'\n\n[EDITION]', fg='yellow')
+        click.secho('\n\n[EDITION]', fg='yellow')
 
         edition_summary = self.get_page(
             re.sub(r'\/(\d{2}),', '/19,', url, flags=re.IGNORECASE))
@@ -124,7 +136,7 @@ class WiedzaIZycieScraper:
 
     def get_article_data(self, url):
 
-        click.secho(f'\n[ARTICLE]', fg='blue')
+        click.secho('\n[ARTICLE]', fg='blue')
 
         article = self.get_page(url)
         author, date, paragraphs = self.get_article_elements(article)

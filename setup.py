@@ -35,7 +35,7 @@ with open(os.path.join(BASE_DIR, '.lily', 'config.json')) as f:
 # -- SETUP
 setup(
     name=config['name'],
-    description='Scaper and graph creator for Wiedza i Życie articles content',
+    description='Scaper and graph creator for Wiedza i Zycie articles content',
     url=config['repository'],
     version=config['version'],
     author='CoSphere Team',
